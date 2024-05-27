@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from "react";
 import { Helmet } from "react-helmet";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import register from "../../schemas/register";
 import axios from "axios";
@@ -26,8 +26,7 @@ const Register = () => {
     type: "",
     message: "",
   });
-
-  const navigate = useNavigate();
+  const [activation, setActivation] = useState<string>("");
 
   const togglePassword = (): void => {
     setPassword(!password);
@@ -47,7 +46,7 @@ const Register = () => {
           .then((response) => {
             const { data } = response;
             if (data.success) {
-              navigate("/");
+              setActivation(data.verification_token);
             }
           })
           .catch((error) => {
@@ -309,6 +308,15 @@ const Register = () => {
                   ""
                 )}
               </form>
+            </div>
+            <div className="text-link hover:underline mt-[5px] -mb-[15px]">
+              {activation ? (
+                <Link to={`http://localhost:3000/activate/${activation}`}>
+                  http://localhost:3000/activate/{activation}
+                </Link>
+              ) : (
+                ""
+              )}
             </div>
             <div
               className="text-blue border-[1px] w-[150px] p-[10px] mx-auto mt-[30px] rounded-[8px] transition duration-300 hover:bg-blue hover:text-white cursor-pointer"
