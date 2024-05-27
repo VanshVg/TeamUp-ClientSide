@@ -1,12 +1,33 @@
-import { useState } from "react";
+import { useFormik } from "formik";
+import { ChangeEvent, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
+import login from "../../schemas/login";
 
 const Login = () => {
+  const data = {
+    username: "",
+    password: "",
+  };
+
   const [password, setPassword] = useState<boolean>(false);
 
   const togglePassword = (): void => {
     setPassword(!password);
+  };
+
+  const handleSubmit = () => {
+    console.log("Submit");
+  };
+
+  const { values, errors, handleBlur, handleChange, touched } = useFormik({
+    initialValues: data,
+    validationSchema: login,
+    onSubmit: handleSubmit,
+  });
+
+  const handleInputChange = (e: ChangeEvent) => {
+    handleChange(e);
   };
 
   return (
@@ -41,9 +62,13 @@ const Login = () => {
                     <input
                       type="text"
                       id="username"
+                      name="username"
                       className="block px-2.5 pb-2.5 pt-4 w-full h-[40px] text-sm text-blue bg-transparent rounded-lg border-[1px] border-blue appearance-none dark:text-blue focus:text-blue dark:border-blue dark:focus:border-blue focus:outline-none focus:ring-0 focus:border-blue peer mx-auto"
                       placeholder=""
                       autoComplete="off"
+                      value={values.username}
+                      onChange={handleInputChange}
+                      onBlur={handleBlur}
                     />
                     <label
                       htmlFor="username"
@@ -52,38 +77,58 @@ const Login = () => {
                       Username or Email
                     </label>
                   </div>
+                  {errors.username && touched.username ? (
+                    <p className="-mb-[12px] mt-[2px] text-left text-[15px] text-red">
+                      {errors.username}
+                    </p>
+                  ) : (
+                    ""
+                  )}
                 </div>
 
-                <div className="flex mt-[20px] max-w-[77%] mx-auto">
-                  <div className="relative w-full">
-                    <input
-                      type={password ? "text" : "password"}
-                      id="password"
-                      className="block px-2.5 pb-2.5 pt-4 w-full h-[40px] text-sm text-blue bg-transparent rounded-lg border-[1px] border-blue appearance-none dark:text-blue focus:text-blue dark:border-blue dark:focus:border-blue focus:outline-none focus:ring-0 focus:border-blue peer mx-auto"
-                      placeholder=""
-                      autoComplete="off"
-                    />
-                    <label
-                      htmlFor="password"
-                      className="absolute text-sm text-blue dark:text-blue duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-focus:text-blue peer-focus:dark:text-blue peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1 cursor-text mx-auto"
-                    >
-                      Password
-                    </label>
+                <div className=" mt-[20px] max-w-[77%] mx-auto">
+                  <div className="flex">
+                    <div className="relative w-full">
+                      <input
+                        type={password ? "text" : "password"}
+                        id="password"
+                        name="password"
+                        className="block px-2.5 pb-2.5 pt-4 w-full h-[40px] text-sm text-blue bg-transparent rounded-lg border-[1px] border-blue appearance-none dark:text-blue focus:text-blue dark:border-blue dark:focus:border-blue focus:outline-none focus:ring-0 focus:border-blue peer mx-auto"
+                        placeholder=""
+                        autoComplete="off"
+                        value={values.password}
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                      />
+                      <label
+                        htmlFor="password"
+                        className="absolute text-sm text-blue dark:text-blue duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-focus:text-blue peer-focus:dark:text-blue peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1 cursor-text mx-auto"
+                      >
+                        Password
+                      </label>
+                    </div>
+                    {password ? (
+                      <img
+                        src="/icons/eye-show.svg"
+                        className="-ml-[30px] z-10 cursor-pointer"
+                        onClick={togglePassword}
+                        alt=""
+                      ></img>
+                    ) : (
+                      <img
+                        src="/icons/eye-hidden.svg"
+                        className="-ml-[30px] z-10 cursor-pointer"
+                        onClick={togglePassword}
+                        alt=""
+                      ></img>
+                    )}
                   </div>
-                  {password ? (
-                    <img
-                      src="/icons/eye-show.svg"
-                      className="-ml-[30px] z-10 cursor-pointer"
-                      onClick={togglePassword}
-                      alt=""
-                    ></img>
+                  {errors.password && touched.password ? (
+                    <p className="-mb-[12px] mt-[2px] bg-orange text-left text-[15px] text-red">
+                      {errors.password}
+                    </p>
                   ) : (
-                    <img
-                      src="/icons/eye-hidden.svg"
-                      className="-ml-[30px] z-10 cursor-pointer"
-                      onClick={togglePassword}
-                      alt=""
-                    ></img>
+                    ""
                   )}
                 </div>
               </form>

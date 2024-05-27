@@ -8,6 +8,7 @@ module.exports = {
       fontBlue: "#28183b",
       link: "#1434a4",
       orange: "#ed743d",
+      red: "#ff0000",
     },
     extend: {},
   },

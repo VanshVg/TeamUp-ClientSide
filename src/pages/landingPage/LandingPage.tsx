@@ -32,7 +32,7 @@ const LandingPage = () => {
             Collaborate. Achieve. Succeed.
           </div>
           <div>
-            <p className="text-[fontBlue] text-center text-[25px] max-w-[640px] mx-auto mt-[40px]">
+            <p className="text-fontBlue text-center text-[25px] max-w-[640px] mx-auto mt-[40px]">
               Streamline your task management with Team Up,
             </p>
             <p className="text-fontBlue text-center text-[25px] max-w-[680px] mx-auto">
