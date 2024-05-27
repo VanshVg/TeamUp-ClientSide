@@ -311,8 +311,8 @@ const Register = () => {
             </div>
             <div className="text-link hover:underline mt-[5px] -mb-[15px]">
               {activation ? (
-                <Link to={`http://localhost:3000/activate/${activation}`}>
-                  http://localhost:3000/activate/{activation}
+                <Link to={`http://localhost:3000/activation/${activation}`}>
+                  http://localhost:3000/activation/{activation}
                 </Link>
               ) : (
                 ""
