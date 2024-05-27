@@ -1,8 +1,14 @@
 import { useFormik } from "formik";
 import { ChangeEvent, useState } from "react";
 import { Helmet } from "react-helmet";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import login from "../../schemas/login";
+import axios from "axios";
+
+interface loginErrorInterface {
+  type: string;
+  message: string;
+}
 
 const Login = () => {
   const data = {
@@ -11,22 +17,47 @@ const Login = () => {
   };
 
   const [password, setPassword] = useState<boolean>(false);
+  const [loginError, setLoginError] = useState<loginErrorInterface>({
+    type: "",
+    message: "",
+  });
+
+  const navigate = useNavigate();
 
   const togglePassword = (): void => {
     setPassword(!password);
   };
 
+  const { values, errors, handleBlur, handleChange, touched, submitForm } =
+    useFormik({
+      initialValues: data,
+      validationSchema: login,
+      onSubmit: (values) => {
+        axios
+          .post(`http://localhost:4000/auth/login`, values)
+          .then((response) => {
+            const { data } = response;
+            if (data.success) {
+              navigate("/");
+            }
+          })
+          .catch((error) => {
+            const { data } = error.response;
+            if (data.type === "credentials") {
+              setLoginError({ type: "credentials", message: data.message });
+            } else if (data.type === "active") {
+              setLoginError({ type: "active", message: data.message });
+            }
+          });
+      },
+    });
+
   const handleSubmit = () => {
-    console.log("Submit");
+    submitForm();
   };
 
-  const { values, errors, handleBlur, handleChange, touched } = useFormik({
-    initialValues: data,
-    validationSchema: login,
-    onSubmit: handleSubmit,
-  });
-
   const handleInputChange = (e: ChangeEvent) => {
+    setLoginError({ type: "", message: "" });
     handleChange(e);
   };
 
@@ -123,9 +154,11 @@ const Login = () => {
                       ></img>
                     )}
                   </div>
-                  {errors.password && touched.password ? (
-                    <p className="-mb-[12px] mt-[2px] bg-orange text-left text-[15px] text-red">
-                      {errors.password}
+                  {(errors.password && touched.password) ||
+                  loginError.type === "credentials" ||
+                  loginError.type === "active" ? (
+                    <p className="-mb-[12px] mt-[2px] ml-[2px] text-left text-[15px] text-red">
+                      {errors.password || loginError.message}
                     </p>
                   ) : (
                     ""
@@ -133,7 +166,10 @@ const Login = () => {
                 </div>
               </form>
             </div>
-            <div className="text-blue border-[1px] w-[150px] p-[10px] mx-auto mt-[40px] rounded-[8px] transition duration-300 hover:bg-blue hover:text-white cursor-pointer">
+            <div
+              className="text-blue border-[1px] w-[150px] p-[10px] mx-auto mt-[40px] rounded-[8px] transition duration-300 hover:bg-blue hover:text-white cursor-pointer"
+              onClick={handleSubmit}
+            >
               Login
             </div>
             <p className="mt-[20px]">

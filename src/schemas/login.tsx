@@ -10,7 +10,7 @@ const login = () => {
       .trim()
       .required("Please enter password")
       .min(6, "Password must have at least six characters")
-      .matches(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/, {
+      .matches(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@_)(#$%^&*]{6,16}$/, {
         message: "At least one number and one special character are must",
       }),
   });
