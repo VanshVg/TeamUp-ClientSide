@@ -6,7 +6,7 @@ import register from "../../schemas/register";
 import axios from "axios";
 import Cookies from "universal-cookie";
 
-interface registerErrorInterface {
+export interface customErrorInterface {
   type: string;
   message: string;
 }
@@ -23,7 +23,7 @@ const Register = () => {
 
   const [password, setPassword] = useState<boolean>(false);
   const [confirmPassword, setConfirmPassword] = useState<boolean>(false);
-  const [registerError, setRegisterError] = useState<registerErrorInterface>({
+  const [registerError, setRegisterError] = useState<customErrorInterface>({
     type: "",
     message: "",
   });
@@ -37,7 +37,7 @@ const Register = () => {
     setConfirmPassword(!confirmPassword);
   };
 
-  const cookies = new Cookies();
+  const cookies: Cookies = new Cookies();
 
   const { values, errors, handleBlur, handleChange, touched, submitForm } =
     useFormik({
@@ -68,11 +68,11 @@ const Register = () => {
       },
     });
 
-  const handleSubmit = () => {
+  const handleSubmit = (): void => {
     submitForm();
   };
 
-  const handleInputChange = (e: ChangeEvent) => {
+  const handleInputChange = (e: ChangeEvent): void => {
     setRegisterError({ type: "", message: "" });
     handleChange(e);
   };

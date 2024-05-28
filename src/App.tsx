@@ -5,6 +5,8 @@ import "./App.css";
 import Register from "./pages/auth/Register";
 import Login from "./pages/auth/Login";
 import Activation from "./pages/auth/Activation";
+import ForgotPassword from "./pages/auth/ForgotPassword";
+import ChangePassword from "./pages/auth/ChangePassword";
 
 function App() {
   return (
@@ -15,6 +17,11 @@ function App() {
           <Route path="/register" element={<Register />}></Route>
           <Route path="/login" element={<Login />}></Route>
           <Route path="/activation/:token" element={<Activation />}></Route>
+          <Route path="/forgotPassword" element={<ForgotPassword />}></Route>
+          <Route
+            path="/changePassword/:token"
+            element={<ChangePassword />}
+          ></Route>
         </Routes>
       </Router>
     </div>

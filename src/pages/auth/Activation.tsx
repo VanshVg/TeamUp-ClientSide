@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
 import { Link, useParams } from "react-router-dom";
 
 const Activation = () => {
@@ -39,36 +40,41 @@ const Activation = () => {
       });
   }, [params.token]);
   return (
-    <div className="activation-container">
-      {activationError ? (
-        <>
-          <p className="text-red">{activationError.message}</p>
-          <p className="text-fontBlue">
-            <Link
-              to={"/register"}
-              className="text-link cursor-pointer hover:underline"
-            >
-              Click here to continue
-            </Link>
-          </p>
-        </>
-      ) : (
-        <>
-          <p className="text-fontBlue mt-[10px]">
-            Your account has been activated.
-          </p>
-          <p className="text-fontBlue">
-            <Link
-              to={"/dashboard/1"}
-              className="text-link cursor-pointer hover:underline"
-            >
-              Click here{" "}
-            </Link>
-            to continue
-          </p>
-        </>
-      )}
-    </div>
+    <>
+      <Helmet>
+        <title>Activation</title>
+      </Helmet>
+      <div className="activation-container">
+        {activationError ? (
+          <>
+            <p className="text-red">{activationError.message}</p>
+            <p className="text-fontBlue">
+              <Link
+                to={"/register"}
+                className="text-link cursor-pointer hover:underline"
+              >
+                Click here to continue
+              </Link>
+            </p>
+          </>
+        ) : (
+          <>
+            <p className="text-fontBlue mt-[10px]">
+              Your account has been activated.
+            </p>
+            <p className="text-fontBlue">
+              <Link
+                to={"/dashboard/1"}
+                className="text-link cursor-pointer hover:underline"
+              >
+                Click here{" "}
+              </Link>
+              to continue
+            </p>
+          </>
+        )}
+      </div>
+    </>
   );
 };
 

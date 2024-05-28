@@ -1,14 +1,10 @@
 import { useFormik } from "formik";
 import { ChangeEvent, useState } from "react";
 import { Helmet } from "react-helmet";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavigateFunction, useNavigate } from "react-router-dom";
 import login from "../../schemas/login";
 import axios from "axios";
-
-interface loginErrorInterface {
-  type: string;
-  message: string;
-}
+import { customErrorInterface } from "./Register";
 
 const Login = () => {
   const data = {
@@ -17,12 +13,12 @@ const Login = () => {
   };
 
   const [password, setPassword] = useState<boolean>(false);
-  const [loginError, setLoginError] = useState<loginErrorInterface>({
+  const [loginError, setLoginError] = useState<customErrorInterface>({
     type: "",
     message: "",
   });
 
-  const navigate = useNavigate();
+  const navigate: NavigateFunction = useNavigate();
 
   const togglePassword = (): void => {
     setPassword(!password);
@@ -52,11 +48,11 @@ const Login = () => {
       },
     });
 
-  const handleSubmit = () => {
+  const handleSubmit = (): void => {
     submitForm();
   };
 
-  const handleInputChange = (e: ChangeEvent) => {
+  const handleInputChange = (e: ChangeEvent): void => {
     setLoginError({ type: "", message: "" });
     handleChange(e);
   };
@@ -173,7 +169,10 @@ const Login = () => {
               Login
             </div>
             <p className="mt-[20px]">
-              <Link to={"/login"} className="text-link hover:underline">
+              <Link
+                to={"/forgotPassword"}
+                className="text-link hover:underline"
+              >
                 Forgot Password?{" "}
               </Link>
             </p>
