@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import register from "../../schemas/register";
 import axios from "axios";
+import Cookies from "universal-cookie";
 
 interface registerErrorInterface {
   type: string;
@@ -36,6 +37,8 @@ const Register = () => {
     setConfirmPassword(!confirmPassword);
   };
 
+  const cookies = new Cookies();
+
   const { values, errors, handleBlur, handleChange, touched, submitForm } =
     useFormik({
       initialValues: data,
@@ -46,6 +49,7 @@ const Register = () => {
           .then((response) => {
             const { data } = response;
             if (data.success) {
+              cookies.set("token", data.token, { path: "/" });
               setActivation(data.verification_token);
             }
           })
@@ -57,6 +61,8 @@ const Register = () => {
               setRegisterError({ type: "email", message: data.message });
             } else if (data.type === "server") {
               setRegisterError({ type: "server", message: data.message });
+            } else if (data.type === "payload") {
+              setRegisterError({ type: "payload", message: data.message });
             }
           });
       },
@@ -299,14 +305,15 @@ const Register = () => {
                   ) : (
                     ""
                   )}
+                  {registerError.type === "server" ||
+                  registerError.type === "payload" ? (
+                    <p className="-mb-[12px] mt-[2px] text-left text-[15px] text-red ml-[2px]">
+                      {registerError.message}
+                    </p>
+                  ) : (
+                    ""
+                  )}
                 </div>
-                {registerError.type === "server" ? (
-                  <p className="-mb-[12px] mt-[2px] text-left text-[15px] text-red ml-[2px]">
-                    {registerError.message}
-                  </p>
-                ) : (
-                  ""
-                )}
               </form>
             </div>
             <div className="text-link hover:underline mt-[5px] -mb-[15px]">
