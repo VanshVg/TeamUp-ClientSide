@@ -1,27 +1,46 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import LandingPage from "./pages/landingPage/LandingPage";
 import "./App.css";
+import LandingPage from "./pages/landingPage/LandingPage";
 import Register from "./pages/auth/Register";
 import Login from "./pages/auth/Login";
 import Activation from "./pages/auth/Activation";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import ChangePassword from "./pages/auth/ChangePassword";
 import ErrorPage from "./pages/ErrorPage";
+import Dashboard from "./pages/dashboard/Dashboard";
+import Protect from "./components/RouteProtection/Protect";
+import { IsLoggedin } from "./components/RouteProtection/IsLoggedin";
 
 function App() {
   return (
     <div className="App">
       <Router>
         <Routes>
-          <Route path="/" element={<LandingPage />}></Route>
-          <Route path="/register" element={<Register />}></Route>
-          <Route path="/login" element={<Login />}></Route>
+          <Route
+            path="/"
+            element={<IsLoggedin Component={LandingPage} />}
+          ></Route>
+          <Route
+            path="/register"
+            element={<IsLoggedin Component={Register} />}
+          ></Route>
+          <Route
+            path="/login"
+            element={<IsLoggedin Component={Login} />}
+          ></Route>
           <Route path="/activation/:token" element={<Activation />}></Route>
-          <Route path="/forgotPassword" element={<ForgotPassword />}></Route>
+          <Route
+            path="/forgotPassword"
+            element={<IsLoggedin Component={ForgotPassword} />}
+          ></Route>
           <Route
             path="/changePassword/:token"
-            element={<ChangePassword />}
+            element={<IsLoggedin Component={ChangePassword} />}
+          ></Route>
+          <Route
+            path="/dashboard"
+            element={<Protect Component={Dashboard} />}
           ></Route>
           <Route path="*" element={<ErrorPage />}></Route>
         </Routes>

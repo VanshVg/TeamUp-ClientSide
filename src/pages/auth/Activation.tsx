@@ -46,7 +46,10 @@ const Activation = () => {
       <div className="activation-container">
         {activationError.type !== "" ? (
           <>
-            <p className="text-red">{activationError.message}</p>
+            <p className="text-red">
+              {activationError.message ||
+                "You are not authorised to access this page"}
+            </p>
             <p className="text-fontBlue">
               <Link
                 to={"/register"}
@@ -63,12 +66,11 @@ const Activation = () => {
             </p>
             <p className="text-fontBlue">
               <Link
-                to={"/dashboard/1"}
+                to={"/dashboard"}
                 className="text-link cursor-pointer hover:underline"
               >
-                Click here{" "}
+                Click here to continue
               </Link>
-              to continue
             </p>
           </>
         )}

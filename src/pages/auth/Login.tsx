@@ -5,6 +5,7 @@ import { Link, NavigateFunction, useNavigate } from "react-router-dom";
 import login from "../../schemas/login";
 import axios from "axios";
 import { customErrorInterface } from "./Register";
+import Cookies, { Cookie } from "universal-cookie";
 
 const Login = () => {
   const data = {
@@ -17,6 +18,8 @@ const Login = () => {
     type: "",
     message: "",
   });
+
+  const cookies: Cookie = new Cookies();
 
   const navigate: NavigateFunction = useNavigate();
 
@@ -34,6 +37,7 @@ const Login = () => {
           .then((response) => {
             const { data } = response;
             if (data.success) {
+              cookies.set("token", data.token, { path: "/" });
               navigate("/");
             }
           })
