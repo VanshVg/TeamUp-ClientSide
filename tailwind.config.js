@@ -9,6 +9,8 @@ module.exports = {
       link: "#1434a4",
       orange: "#ed743d",
       red: "#ff0000",
+      lightBg: "#f2eeee",
+      skyBlue: "#d9f5ff",
     },
     extend: {},
   },
