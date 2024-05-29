@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from "react";
 import { Helmet } from "react-helmet";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import register from "../../schemas/register";
 import axios from "axios";
@@ -20,6 +20,8 @@ const Register = () => {
     password: "",
     confirmPassword: "",
   };
+
+  const navigate = useNavigate();
 
   const [password, setPassword] = useState<boolean>(false);
   const [confirmPassword, setConfirmPassword] = useState<boolean>(false);
@@ -55,14 +57,10 @@ const Register = () => {
           })
           .catch((error) => {
             const { data } = error.response;
-            if (data.type === "username") {
-              setRegisterError({ type: "username", message: data.message });
-            } else if (data.type === "email") {
-              setRegisterError({ type: "email", message: data.message });
-            } else if (data.type === "server") {
-              setRegisterError({ type: "server", message: data.message });
-            } else if (data.type === "payload") {
-              setRegisterError({ type: "payload", message: data.message });
+            if (data.type === "server") {
+              navigate("*");
+            } else if (!data.success) {
+              setRegisterError({ type: data.type, message: data.message });
             }
           });
       },

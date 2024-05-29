@@ -1,10 +1,11 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { customErrorInterface } from "./Register";
 import { useFormik } from "formik";
 import changePassword from "../../schemas/changePassword";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 interface dataInterface {
   password: string;
@@ -19,6 +20,7 @@ const ChangePassword = () => {
 
   const params = useParams();
   const state = useLocation();
+  const navigate = useNavigate();
 
   const [password, setPassword] = useState<boolean>(false);
   const [confirmPassword, setConfirmPassword] = useState<boolean>(false);
@@ -42,11 +44,13 @@ const ChangePassword = () => {
       })
       .catch((error) => {
         const { data } = error.response;
-        if (!data.success) {
+        if (data.type === "server") {
+          navigate("*");
+        } else if (!data.success) {
           setChangePasswordError({ type: data.type, message: data.message });
         }
       });
-  }, [params.token]);
+  }, [params.token, username]);
 
   const { values, errors, handleBlur, handleChange, touched, submitForm } =
     useFormik({
@@ -60,10 +64,22 @@ const ChangePassword = () => {
         axios
           .put(`http://localhost:4000/auth/password`, userData)
           .then((resp) => {
-            console.log(resp);
+            if (resp.data.success) {
+              Swal.fire({
+                title: "Success!",
+                text: "Password is changed successfully",
+                icon: "success",
+                showConfirmButton: false,
+                timer: 2000,
+              }).then(() => {
+                navigate("/login");
+              });
+            }
           })
           .catch((error) => {
-            console.log(error.response);
+            if (!error.response.data.success) {
+              navigate("*");
+            }
           });
       },
     });
@@ -94,7 +110,7 @@ const ChangePassword = () => {
         <p className="text-red">{changePasswordError.message}</p>
       ) : (
         <div className="flex register-container max-w-[1440px] mx-auto justify-center">
-          <div className="flex shadow-[2px_2px_2px_2px_grey] mt-[5%] p-[10px] rounded-[0.438rem]">
+          <div className="flex shadow-[2px_2px_2px_2px_grey] w-[1000px] mt-[5%] p-[10px] rounded-[0.438rem]">
             <div className="w-[50%]">
               <img
                 src="/background/change_password_bg.jpeg"

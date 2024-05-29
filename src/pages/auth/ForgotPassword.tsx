@@ -21,7 +21,7 @@ const ForgotPassword = () => {
     type: "",
     message: "",
   });
-  const [passwordLink, setPasswordLink] = useState<string>("");
+  const [resetToken, setResetToken] = useState<string>("");
 
   const { values, errors, handleBlur, handleChange, touched, submitForm } =
     useFormik({
@@ -32,14 +32,14 @@ const ForgotPassword = () => {
           .post(`http://localhost:4000/auth/verify`, values)
           .then((resp) => {
             if (resp.data.success) {
-              setPasswordLink(
-                `http://localhost:3000/changePassword/${resp.data.reset_token}`
-              );
+              setResetToken(resp.data.reset_token);
             }
           })
           .catch((error) => {
             const { data } = error.response;
-            if (!data.success) {
+            if (data.type === "server") {
+              navigate("*");
+            } else if (!data.success) {
               setVerifyError({ type: data.type, message: data.message });
             }
           });
@@ -60,8 +60,8 @@ const ForgotPassword = () => {
       <Helmet>
         <title>Forgot Password</title>
       </Helmet>
-      <div className="flex forgot-container max-w-[1440px] mx-auto justify-center">
-        <div className="flex shadow-[2px_2px_2px_2px_grey] mt-[5%] p-[10px] rounded-[0.438rem]">
+      <div className="flex forgot-container max-w-[1440px]  mx-auto justify-center">
+        <div className="flex shadow-[2px_2px_2px_2px_grey] w-[950px] mt-[5%] p-[10px] rounded-[0.438rem]">
           <div className="w-[50%]">
             <img
               src="/background/verify_bg.jpeg"
@@ -114,16 +114,16 @@ const ForgotPassword = () => {
                   ) : (
                     ""
                   )}
-                  {passwordLink ? (
+                  {resetToken ? (
                     <p
-                      className="text-link hover:underline mt-[5px] -mb-[15px]"
+                      className="text-link hover:underline mt-[5px] -mb-[15px] cursor-pointer"
                       onClick={() => {
-                        navigate(passwordLink, {
+                        navigate(`/changePassword/${resetToken}`, {
                           state: { username: values.username },
                         });
                       }}
                     >
-                      {passwordLink}
+                      {`http://localhost:3000/changePassword/${resetToken}`}
                     </p>
                   ) : (
                     ""

@@ -7,6 +7,7 @@ import Login from "./pages/auth/Login";
 import Activation from "./pages/auth/Activation";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import ChangePassword from "./pages/auth/ChangePassword";
+import ErrorPage from "./pages/ErrorPage";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
             path="/changePassword/:token"
             element={<ChangePassword />}
           ></Route>
+          <Route path="*" element={<ErrorPage />}></Route>
         </Routes>
       </Router>
     </div>

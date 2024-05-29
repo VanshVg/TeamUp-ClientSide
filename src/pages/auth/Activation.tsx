@@ -1,10 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 const Activation = () => {
   const params = useParams();
+  const navigate = useNavigate();
 
   const [activationError, setActivationError] = useState({
     type: "",
@@ -25,18 +26,16 @@ const Activation = () => {
         }
       )
       .then((resp) => {
-        console.log(resp);
+        if (resp.data.success) {
+        }
       })
       .catch((error) => {
         const { data } = error.response;
-        if (!data.success) {
-          if (data.type === "unauthorised") {
-            setActivationError({ type: "unauthorised", message: data.message });
-          } else if (data.type === "server") {
-            setActivationError({ type: "server", message: data.message });
-          }
+        if (data.type === "server") {
+          navigate("*");
+        } else if (!data.success) {
+          setActivationError({ type: data.type, message: data.message });
         }
-        console.log(data);
       });
   }, [params.token]);
   return (
@@ -45,7 +44,7 @@ const Activation = () => {
         <title>Activation</title>
       </Helmet>
       <div className="activation-container">
-        {activationError ? (
+        {activationError.type !== "" ? (
           <>
             <p className="text-red">{activationError.message}</p>
             <p className="text-fontBlue">

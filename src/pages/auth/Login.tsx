@@ -39,10 +39,10 @@ const Login = () => {
           })
           .catch((error) => {
             const { data } = error.response;
-            if (data.type === "credentials") {
-              setLoginError({ type: "credentials", message: data.message });
-            } else if (data.type === "active") {
-              setLoginError({ type: "active", message: data.message });
+            if (data.type === "server") {
+              navigate("*");
+            } else if (!data.success) {
+              setLoginError({ type: data.type, message: data.message });
             }
           });
       },
@@ -63,7 +63,7 @@ const Login = () => {
         <title>Login</title>
       </Helmet>
       <div className="flex register-container max-w-[1440px] mx-auto justify-center">
-        <div className="flex shadow-[2px_2px_2px_2px_grey] mt-[5%] p-[10px] rounded-[0.438rem]">
+        <div className="flex shadow-[2px_2px_2px_2px_grey] w-[1000px] mt-[5%] p-[10px] rounded-[0.438rem]">
           <div className="w-[50%]">
             <img
               src="/background/login_bg.jpg"
