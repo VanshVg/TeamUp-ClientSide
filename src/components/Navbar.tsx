@@ -3,9 +3,11 @@ import { toggleSidebar, toggleTeams } from "../redux/actions/sidebarActions";
 import { RootState } from "../redux/types";
 import CreateTeam from "./modals/CreateTeam";
 import { useState } from "react";
+import JoinTeam from "./modals/JoinTeam";
 
 const Navbar = () => {
   const [isCreateTeam, setIsCreateTeam] = useState<boolean>(false);
+  const [isJoinTeam, setIsJoinTeam] = useState<boolean>(false);
 
   const isSidebarOpen = useSelector(
     (state: RootState) => state.sidebar.isSidebarOpen
@@ -18,6 +20,10 @@ const Navbar = () => {
 
   const handleCreateTeam = () => {
     setIsCreateTeam(true);
+  };
+
+  const handleJoinTeam = () => {
+    setIsJoinTeam(true);
   };
 
   const handleMenu = () => {
@@ -47,7 +53,10 @@ const Navbar = () => {
             <img src="/icons/plus.svg" className="mt-[2px]" alt=""></img>
             <p className="ml-[5px] mt-[8px]">CreateTeam</p>
           </div>
-          <div className="flex text-fontBlue text-[18px] duration-300 ease-out cursor-pointer hover:bg-lightBg rounded-[22px] px-[10px]">
+          <div
+            className="flex text-fontBlue text-[18px] duration-300 ease-out cursor-pointer hover:bg-lightBg rounded-[22px] px-[10px]"
+            onClick={handleJoinTeam}
+          >
             <img src="/icons/door.svg" className="mt-[2px]" alt=""></img>
             <p className="ml-[10px] mt-[8px]">JoinTeam</p>
           </div>
@@ -60,6 +69,10 @@ const Navbar = () => {
       <CreateTeam
         isOpen={isCreateTeam}
         onRequestClose={() => setIsCreateTeam(false)}
+      />
+      <JoinTeam
+        isOpen={isJoinTeam}
+        onRequestClose={() => setIsJoinTeam(false)}
       />
     </>
   );
