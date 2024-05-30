@@ -1,7 +1,19 @@
+import { useDispatch } from "react-redux";
+import { toggleSidebar } from "../redux/actions/sidebarActions";
+
 const Navbar = () => {
+  const dispatch = useDispatch();
+
+  const handleMenu = () => {
+    dispatch(toggleSidebar());
+  };
+
   return (
     <div className="flex dashboard-navbar justify-between px-[30px] mx-auto shadow-[1px_1px_1px_1px_gray] py-[10px] pb-[15px]">
-      <div className="flex text-blue text-[40px] font-bold">
+      <div
+        className="flex text-blue text-[40px] font-bold"
+        onClick={handleMenu}
+      >
         <img
           src="/icons/menu.svg"
           className="h-[60px] mt-[2px] mr-[10px] duration-300 ease-out cursor-pointer hover:bg-lightBg rounded-[32px] p-[10px]"
