@@ -86,15 +86,16 @@ const Login = () => {
               </h1>
             </div>
             <div>
-              <form autoComplete="off">
+              <form>
                 <div className="flex mx-auto max-w-[77%] gap-[6%] mt-[20px]"></div>
                 <div className="mt-[20px] max-w-[77%] mx-auto">
                   <div className="relative">
                     <input
+                      tabIndex={1}
                       type="text"
                       id="username"
                       name="username"
-                      className="block px-2.5 pb-2.5 pt-4 w-full h-[40px] text-sm text-blue bg-transparent rounded-lg border-[1px] border-blue appearance-none dark:text-blue focus:text-blue dark:border-blue dark:focus:border-blue focus:outline-none focus:ring-0 focus:border-blue peer mx-auto"
+                      className="block  px-2.5 pb-2.5 pt-4 w-full h-[40px] text-sm text-blue bg-transparent rounded-lg border-[1px] border-blue appearance-none dark:text-blue focus:text-blue dark:border-blue dark:focus:border-blue focus:outline-none focus:ring-0 focus:border-blue peer mx-auto "
                       placeholder=""
                       autoComplete="off"
                       value={values.username}
@@ -121,6 +122,7 @@ const Login = () => {
                   <div className="flex">
                     <div className="relative w-full">
                       <input
+                        tabIndex={2}
                         type={password ? "text" : "password"}
                         id="password"
                         name="password"
@@ -167,6 +169,7 @@ const Login = () => {
               </form>
             </div>
             <div
+              tabIndex={3}
               className="text-blue border-[1px] w-[150px] p-[10px] mx-auto mt-[40px] rounded-[8px] transition duration-300 hover:bg-blue hover:text-white cursor-pointer"
               onClick={handleSubmit}
             >

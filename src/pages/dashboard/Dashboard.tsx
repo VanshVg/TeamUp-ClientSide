@@ -4,17 +4,17 @@ import Sidebar from "../../components/Sidebar";
 
 const Dashboard = () => {
   return (
-    <>
+    <div className="h-screen">
       <Helmet>
         <title>Dashboard</title>
       </Helmet>
-      <div className="dashboard-container">
+      <div className="dashboard-container h-screen overflow-hidden">
         <Navbar />
-        <div className="flex h-[100vh]">
+        <div className="flex h-screen">
           <Sidebar />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

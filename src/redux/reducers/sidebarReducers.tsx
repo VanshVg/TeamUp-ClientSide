@@ -1,8 +1,9 @@
 import { PayloadAction } from "@reduxjs/toolkit";
-import { TOGGLE_SIDEBAR } from "../types";
+import { TOGGLE_SIDEBAR, TOGGLE_TEAMS } from "../types";
 
 const initialState = {
   isSidebarOpen: false,
+  isTeamsOpen: false,
 };
 
 const sideBarReducer = (state = initialState, action: PayloadAction) => {
@@ -11,6 +12,11 @@ const sideBarReducer = (state = initialState, action: PayloadAction) => {
       return {
         ...state,
         isSidebarOpen: !state.isSidebarOpen,
+      };
+    case TOGGLE_TEAMS:
+      return {
+        ...state,
+        isTeamsOpen: !state.isTeamsOpen,
       };
     default:
       return state;

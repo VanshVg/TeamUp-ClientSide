@@ -129,7 +129,7 @@ const ChangePassword = () => {
                 </h1>
               </div>
               <div>
-                <form autoComplete="off">
+                <form>
                   <div className="mt-[20px] max-w-[77%] mx-auto">
                     <div className="flex">
                       <div className="relative w-full">

@@ -97,7 +97,7 @@ const Register = () => {
               </h1>
             </div>
             <div>
-              <form autoComplete="off">
+              <form>
                 <div className="flex mx-auto max-w-[77%] gap-[6%] mt-[20px]">
                   <div className="w-[48%]">
                     <div className="relative">

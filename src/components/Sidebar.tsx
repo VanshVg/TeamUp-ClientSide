@@ -1,25 +1,32 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { RootState } from "../redux/types";
+import { toggleSidebar, toggleTeams } from "../redux/actions/sidebarActions";
 
 const Sidebar = () => {
-  const [myTeams, setMyTeams] = useState<boolean>(false);
-
+  // const [myTeams, setMyTeams] = useState<boolean>(false);
+  const isTeamsOpen = useSelector(
+    (state: RootState) => state.sidebar.isTeamsOpen
+  );
   const isSidebarOpen = useSelector(
     (state: RootState) => state.sidebar.isSidebarOpen
   );
 
   const location = useLocation();
+  const dispatch = useDispatch();
 
   const handleMyTeams = (): void => {
-    setMyTeams(!myTeams);
+    if (!isTeamsOpen && !isSidebarOpen) {
+      dispatch(toggleSidebar());
+    }
+    dispatch(toggleTeams());
   };
 
   return (
     <>
       {isSidebarOpen ? (
-        <div className="h-[100%] duration-300 ease-in shadow-[1px_1px_1px_1px_gray] w-[23%] pt-[15px] overflow-y-auto">
+        <div className="h-screen duration-300 ease-in shadow-[1px_1px_1px_1px_gray] w-[23%] pt-[15px] overflow-y-auto">
           <div
             className={`${
               location.pathname === "/dashboard"
@@ -36,7 +43,7 @@ const Sidebar = () => {
               className="flex -ml-[10px] py-[2px] duration-300 ease-out rounded-[12px] hover:bg-lightBg max-w-[95%]"
               onClick={handleMyTeams}
             >
-              {myTeams ? (
+              {isTeamsOpen ? (
                 <img src="/icons/down-arrow.svg" className="ml-[22px]" alt="" />
               ) : (
                 <img
@@ -66,7 +73,7 @@ const Sidebar = () => {
           </div>
         </div>
       ) : (
-        <div className="h-[100%] duration-300 ease-in shadow-[1px_1px_1px_1px_gray] w-[7%] pt-[15px] overflow-y-auto">
+        <div className="h-screen duration-300 ease-in shadow-[1px_1px_1px_1px_gray] w-[7%] pt-[15px] overflow-y-auto">
           <div
             className={`${
               location.pathname === "/dashboard"
@@ -83,7 +90,7 @@ const Sidebar = () => {
               className="flex -ml-[10px] py-[4px] duration-300 ease-out rounded-[12px] hover:bg-lightBg max-w-[95%]"
               onClick={handleMyTeams}
             >
-              {myTeams ? (
+              {isTeamsOpen ? (
                 <img src="/icons/down-arrow.svg" className="ml-[22px]" alt="" />
               ) : (
                 <img

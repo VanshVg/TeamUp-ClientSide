@@ -80,7 +80,7 @@ const ForgotPassword = () => {
               </h1>
             </div>
             <div>
-              <form autoComplete="off">
+              <form>
                 <div className="flex mx-auto max-w-[77%] gap-[6%] mt-[20px]"></div>
                 <div className="mt-[20px] max-w-[77%] mx-auto">
                   <div className="relative">
