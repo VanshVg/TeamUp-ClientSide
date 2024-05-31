@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { RootState } from "../redux/types";
@@ -7,6 +7,8 @@ import { Tooltip } from "@mui/material";
 import axios from "axios";
 import { setUserTeams } from "../redux/actions/userTeams";
 import { userTeamsInterface } from "../pages/dashboard/Dashboard";
+import Swal from "sweetalert2";
+import Cookies from "universal-cookie";
 
 const Sidebar = () => {
   const isTeamsOpen = useSelector(
@@ -22,6 +24,8 @@ const Sidebar = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const cookies: Cookies = new Cookies();
 
   useEffect(() => {
     axios
@@ -42,6 +46,34 @@ const Sidebar = () => {
       dispatch(toggleSidebar());
     }
     dispatch(toggleTeams());
+  };
+
+  const handleLogout = () => {
+    Swal.fire({
+      title: "Logout Confirmation",
+      text: "Are sure you want to logout?",
+      icon: "warning",
+      showConfirmButton: true,
+      confirmButtonText: "Yes",
+      confirmButtonColor: "#2554c7",
+      color: "#28183b",
+      showLoaderOnConfirm: true,
+    })
+      .then(() => {
+        cookies.remove("token");
+        Swal.fire({
+          title: "Logout Successful",
+          text: "Logout Successful",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 2000,
+        }).then(() => {
+          navigate("/");
+        });
+      })
+      .catch(() => {
+        navigate("*");
+      });
   };
 
   return (
@@ -119,7 +151,10 @@ const Sidebar = () => {
             <img src="/icons/settings.svg" className="ml-[45px]" alt="" />
             <p className="ml-[15px] text-[18px] text-fontBlue">Settings</p>
           </div>
-          <div className="mt-[15px] rounded-[12px] -ml-[10px] py-[2px] cursor-pointer flex duration-300 ease-out hover:bg-lightBg max-w-[95%]">
+          <div
+            className="mt-[15px] rounded-[12px] -ml-[10px] py-[2px] cursor-pointer flex duration-300 ease-out hover:bg-lightBg max-w-[95%]"
+            onClick={handleLogout}
+          >
             <img src="/icons/exit.svg" className="ml-[45px]" alt="" />
             <p className="ml-[15px] text-[18px] text-fontBlue">Logout</p>
           </div>
@@ -186,7 +221,10 @@ const Sidebar = () => {
             </div>
           </Tooltip>
           <Tooltip title="Logout">
-            <div className="mt-[14px] rounded-[12px] -ml-[10px] py-[4px] cursor-pointer flex duration-300 ease-out hover:bg-lightBg max-w-[95%]">
+            <div
+              className="mt-[14px] rounded-[12px] -ml-[10px] py-[4px] cursor-pointer flex duration-300 ease-out hover:bg-lightBg max-w-[95%]"
+              onClick={handleLogout}
+            >
               <img src="/icons/exit.svg" className="ml-[45px]" alt="" />
             </div>
           </Tooltip>

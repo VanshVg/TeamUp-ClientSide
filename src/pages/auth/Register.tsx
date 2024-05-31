@@ -47,7 +47,9 @@ const Register = () => {
       validationSchema: register,
       onSubmit: (values) => {
         axios
-          .post(`http://localhost:4000/auth/register`, values)
+          .post(`http://localhost:4000/auth/register`, values, {
+            withCredentials: true,
+          })
           .then((response) => {
             const { data } = response;
             if (data.success) {
