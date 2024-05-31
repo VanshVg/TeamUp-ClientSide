@@ -11,6 +11,7 @@ module.exports = {
       red: "#ff0000",
       lightBg: "#f2eeee",
       skyBlue: "#d9f5ff",
+      gray: "#d3d3d3",
     },
     extend: {},
   },

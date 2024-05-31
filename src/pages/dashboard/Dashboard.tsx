@@ -1,14 +1,39 @@
 import { Helmet } from "react-helmet";
-import Navbar from "../../components/Navbar";
-import Sidebar from "../../components/Sidebar";
 import { useEffect, useState } from "react";
 import axios from "axios";
+
+import Navbar from "../../components/Navbar";
+import Sidebar from "../../components/Sidebar";
 import { customErrorInterface } from "../auth/Register";
 import CreateTeam from "../../components/modals/CreateTeam";
 import JoinTeam from "../../components/modals/JoinTeam";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../redux/types";
+import { setUserTeams } from "../../redux/actions/userTeams";
+
+interface teamInterface {
+  id: number;
+  name: string;
+  description: string | null;
+  code: string;
+  members: number;
+  banner_url: string;
+  icon_color: string;
+  created_at: Date;
+  updated_at: Date;
+}
+
+export interface userTeamsInterface {
+  id: number;
+  team_id: number;
+  user_id: number;
+  role: "admin" | "member";
+  created_at: Date;
+  updated_at: Date;
+  team: teamInterface;
+}
 
 const Dashboard = () => {
-  const [userTeams, setUserTeams] = useState([]);
   const [isCreateTeam, setIsCreateTeam] = useState<boolean>(false);
   const [isJoinTeam, setIsJoinTeam] = useState<boolean>(false);
 
@@ -16,6 +41,12 @@ const Dashboard = () => {
     type: "",
     message: "",
   });
+
+  const dispatch = useDispatch();
+
+  const userTeams: userTeamsInterface[] = useSelector(
+    (state: RootState) => state.teams.userTeams
+  ) as userTeamsInterface[];
 
   const handleCreateTeam = () => {
     setIsCreateTeam(true);
@@ -32,10 +63,13 @@ const Dashboard = () => {
       })
       .then((resp) => {
         const { data } = resp;
-        setUserTeams(data.userTeams);
+        dispatch(setUserTeams(data.userTeams));
       })
-      .catch((error) => {});
-  });
+      .catch((error) => {
+        const { data } = error.response;
+        setDashboardError({ type: data.type, message: data.message });
+      });
+  }, [CreateTeam, dispatch]);
 
   return (
     <div className="h-screen">
@@ -46,7 +80,7 @@ const Dashboard = () => {
         <Navbar />
         <div className="flex h-screen">
           <Sidebar />
-          <div className="w-[93%]">
+          <div className="w-[93%] overflow-y-auto pb-[100px]">
             {dashboardError.type ? (
               <div>{dashboardError.message}</div>
             ) : (
@@ -56,6 +90,7 @@ const Dashboard = () => {
                     <img
                       src="/background/addTeam_bg.png"
                       className="mx-auto -mt-[40px]"
+                      alt=""
                     ></img>
                     <div className="flex gap-[15px] justify-center">
                       <div
@@ -81,7 +116,37 @@ const Dashboard = () => {
                     />
                   </div>
                 ) : (
-                  <div></div>
+                  <div className="p-[20px]">
+                    <div className="flex flex-wrap mx-auto">
+                      {userTeams &&
+                        userTeams.map((element, index) => (
+                          <div className="w-[calc(100%/3)] p-[10px]">
+                            <div className="relative rounded-t-[8px]">
+                              <img
+                                src={`${element["team"]["banner_url"]}.jpg`}
+                                className="rounded-t-[8px]"
+                                alt=""
+                              ></img>
+                              <h2 className="text-fontBlue absolute text-[25px] top-[58%] right-2 text-left hover:underline cursor-pointer">
+                                {element["team"]["name"].length > 13
+                                  ? element["team"]["name"].slice(0, 13) + `...`
+                                  : element["team"]["name"]}
+                              </h2>
+                              <img
+                                src="/icons/three-dots.svg"
+                                className="absolute right-0 top-1 cursor-pointer"
+                                alt=""
+                              ></img>
+                            </div>
+                            <div className="text-left border-[1px] border-[gray] rounded-b-[8px] -mt-[1px] h-[200px]">
+                              <div className="mt-[5px] ml-[4px] h-[70%] text-fontBlue"></div>
+                              <div className="h-[1px] bg-gray"></div>
+                              <div className="pt-[6px] text-fontBlue"></div>
+                            </div>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
                 )}
               </div>
             )}

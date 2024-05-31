@@ -1,11 +1,87 @@
+import { useFormik } from "formik";
 import Modal from "react-modal";
+import createTeam from "../../schemas/createTeam";
+import axios from "axios";
+import { ChangeEvent, useState } from "react";
+import { customErrorInterface } from "../../pages/auth/Register";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../redux/types";
+import { setUserTeams } from "../../redux/actions/userTeams";
 
 interface modalInterface {
   isOpen: boolean;
   onRequestClose: () => void;
 }
 const CreateTeam = (props: modalInterface) => {
+  const data = {
+    teamName: "",
+    teamDescription: "",
+  };
+
+  const userTeams = useSelector((state: RootState) => state.teams.userTeams);
+
   const { isOpen, onRequestClose } = props;
+
+  const [createTeamError, setCreateTeamError] = useState<customErrorInterface>({
+    type: "",
+    message: "",
+  });
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { values, errors, handleBlur, handleChange, touched, submitForm } =
+    useFormik({
+      initialValues: data,
+      validationSchema: createTeam,
+      onSubmit: (values) => {
+        axios
+          .post(`http://localhost:4000/team/create`, values, {
+            withCredentials: true,
+          })
+          .then((resp) => {
+            if (resp.data.success) {
+              axios
+                .get(`http://localhost:4000/team/userTeams`, {
+                  withCredentials: true,
+                })
+                .then((resp) => {
+                  const { data } = resp;
+                  dispatch(setUserTeams(data.userTeams));
+                })
+                .catch((error) => {
+                  const { data } = error.response;
+                  setCreateTeamError({
+                    type: data.type,
+                    message: data.message,
+                  });
+                });
+              onRequestClose();
+            }
+          })
+          .catch((error) => {
+            const { data } = error.response;
+            if (data.type === "server") {
+              navigate("*");
+            } else if (!data.success) {
+              setCreateTeamError({
+                type: data.type,
+                message: data.message,
+              });
+            }
+          });
+      },
+    });
+
+  const handleInputChange = (e: ChangeEvent) => {
+    handleChange(e);
+  };
+
+  const handleSubmit = () => {
+    submitForm();
+  };
+
   return (
     <div className="createTeam-container w-[200px]">
       <Modal
@@ -20,6 +96,7 @@ const CreateTeam = (props: modalInterface) => {
           src="/icons/close.svg"
           className="flex ml-auto cursor-pointer"
           onClick={onRequestClose}
+          alt=""
         ></img>
         <form>
           <h1 className="text-blue text-center text-[30px] font-bold">
@@ -36,9 +113,9 @@ const CreateTeam = (props: modalInterface) => {
                 className="block  px-2.5 pb-2.5 pt-4 w-full h-[40px] text-sm text-blue bg-transparent rounded-lg border-[1px] border-blue appearance-none dark:text-blue focus:text-blue dark:border-blue dark:focus:border-blue focus:outline-none focus:ring-0 focus:border-blue peer mx-auto "
                 placeholder=""
                 autoComplete="off"
-                // value={values.username}
-                // onChange={handleInputChange}
-                // onBlur={handleBlur}
+                value={values.teamName}
+                onChange={handleInputChange}
+                onBlur={handleBlur}
               />
               <label
                 htmlFor="team-name"
@@ -47,13 +124,13 @@ const CreateTeam = (props: modalInterface) => {
                 Team Name
               </label>
             </div>
-            {/* {errors.username && touched.username ? (
+            {errors.teamName && touched.teamName ? (
               <p className="-mb-[12px] mt-[2px] text-left text-[15px] text-red">
-                {errors.username}
+                {errors.teamName}
               </p>
             ) : (
               ""
-            )} */}
+            )}
           </div>
 
           <div className=" mt-[20px] max-w-[77%] mx-auto">
@@ -67,9 +144,9 @@ const CreateTeam = (props: modalInterface) => {
                   className="block px-2.5 pb-2.5 pt-4 w-full h-[40px] text-sm text-blue bg-transparent rounded-lg border-[1px] border-blue appearance-none dark:text-blue focus:text-blue dark:border-blue dark:focus:border-blue focus:outline-none focus:ring-0 focus:border-blue peer mx-auto"
                   placeholder=""
                   autoComplete="off"
-                  // value={values.password}
-                  // onChange={handleInputChange}
-                  // onBlur={handleBlur}
+                  value={values.teamDescription}
+                  onChange={handleInputChange}
+                  onBlur={handleBlur}
                 />
                 <label
                   htmlFor="team-description"
@@ -84,6 +161,7 @@ const CreateTeam = (props: modalInterface) => {
         <div
           tabIndex={3}
           className="text-blue text-center border-[1px] w-[150px] p-[10px] mx-auto mt-[40px] rounded-[8px] transition duration-300 hover:bg-blue hover:text-white cursor-pointer"
+          onClick={handleSubmit}
         >
           Create Team
         </div>
