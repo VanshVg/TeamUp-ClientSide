@@ -1,21 +1,41 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { RootState } from "../redux/types";
 import { toggleSidebar, toggleTeams } from "../redux/actions/sidebarActions";
 import { Tooltip } from "@mui/material";
+import axios from "axios";
+import { setUserTeams } from "../redux/actions/userTeams";
+import { userTeamsInterface } from "../pages/dashboard/Dashboard";
 
 const Sidebar = () => {
-  // const [myTeams, setMyTeams] = useState<boolean>(false);
   const isTeamsOpen = useSelector(
     (state: RootState) => state.sidebar.isTeamsOpen
   );
   const isSidebarOpen = useSelector(
     (state: RootState) => state.sidebar.isSidebarOpen
   );
+  const userTeams: userTeamsInterface[] = useSelector(
+    (state: RootState) => state.teams.userTeams
+  ) as userTeamsInterface[];
 
   const location = useLocation();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:4000/team/userTeams`, {
+        withCredentials: true,
+      })
+      .then((resp) => {
+        const { data } = resp;
+        dispatch(setUserTeams(data.userTeams));
+      })
+      .catch((error) => {
+        navigate("*");
+      });
+  }, [dispatch]);
 
   const handleMyTeams = (): void => {
     if (!isTeamsOpen && !isSidebarOpen) {
@@ -27,7 +47,7 @@ const Sidebar = () => {
   return (
     <>
       {isSidebarOpen ? (
-        <div className="h-screen duration-300 ease-in shadow-[1px_1px_1px_1px_gray] w-[23%] pt-[15px] overflow-y-auto">
+        <div className="h-screen duration-300 ease-in shadow-[1px_1px_1px_1px_gray] w-[23%] pt-[15px] pb-[110px] overflow-y-auto">
           <div
             className={`${
               location.pathname === "/dashboard"
@@ -58,6 +78,22 @@ const Sidebar = () => {
                 {" "}
                 <span className="mr-[5px]">My</span>Teams
               </p>
+            </div>
+            <div className="mt-[10px]">
+              {isTeamsOpen &&
+                userTeams &&
+                userTeams.map((element, index) => (
+                  <div className="flex hover:bg-lightBg w-[93%] mt-[5px] duration-300 ease-out rounded-[12px] py-[5px] -ml-[10px]">
+                    <div className="h-[25px] ml-[45px] pt-[1px] bg-blue  w-[25px] rounded-[32px] text-white text-[16px]">
+                      {element["team"]["name"][0].toUpperCase()}
+                    </div>
+                    <p className="ml-[22px] text-fontBlue">
+                      {element["team"]["name"].length > 13
+                        ? element["team"]["name"].slice(0, 13) + `...`
+                        : element["team"]["name"]}
+                    </p>
+                  </div>
+                ))}
             </div>
           </div>
           <div className="h-[1px] bg-[grey] mt-[15px] opacity-50 w-full"></div>
