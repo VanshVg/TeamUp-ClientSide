@@ -1,11 +1,74 @@
+import { useFormik } from "formik";
 import Modal from "react-modal";
+import joinTeam from "../../schemas/joinTeam";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { fetchUserTeams } from "../../hooks/fetchData";
+import { useDispatch } from "react-redux";
+import { setUserTeams } from "../../redux/actions/userTeams";
+import { ChangeEvent, useState } from "react";
+import { customErrorInterface } from "../../pages/auth/Register";
 
 interface modalInterface {
   isOpen: boolean;
   onRequestClose: () => void;
 }
 const JoinTeam = (props: modalInterface) => {
+  const data = {
+    teamCode: "",
+  };
   const { isOpen, onRequestClose } = props;
+
+  const [joinTeamError, setJoinTeamError] = useState<customErrorInterface>({
+    type: "",
+    message: "",
+  });
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { values, errors, handleBlur, handleChange, touched, submitForm } =
+    useFormik({
+      initialValues: data,
+      validationSchema: joinTeam,
+      onSubmit: (values) => {
+        axios
+          .post(`http://localhost:4000/team/join`, values, {
+            withCredentials: true,
+          })
+          .then(async (resp) => {
+            if (resp.data.success) {
+              try {
+                let result = await fetchUserTeams();
+                dispatch(setUserTeams(result.data.userTeams));
+              } catch (error) {
+                if (error) {
+                  navigate("*");
+                }
+              }
+              onRequestClose();
+            }
+          })
+          .catch((error) => {
+            const { data } = error.response;
+            if (data.type === "server") {
+              navigate("*");
+            } else if (!data.success) {
+              setJoinTeamError({ type: data.type, message: data.message });
+            }
+          });
+      },
+    });
+
+  const handleInputChange = (e: ChangeEvent) => {
+    setJoinTeamError({ type: "", message: "" });
+    handleChange(e);
+  };
+
+  const handleSubmit = () => {
+    submitForm();
+  };
+
   return (
     <div className="createTeam-container w-[200px]">
       <Modal
@@ -36,9 +99,9 @@ const JoinTeam = (props: modalInterface) => {
                 className="block  px-2.5 pb-2.5 pt-4 w-full h-[40px] text-sm text-blue bg-transparent rounded-lg border-[1px] border-blue appearance-none dark:text-blue focus:text-blue dark:border-blue dark:focus:border-blue focus:outline-none focus:ring-0 focus:border-blue peer mx-auto "
                 placeholder=""
                 autoComplete="off"
-                // value={values.username}
-                // onChange={handleInputChange}
-                // onBlur={handleBlur}
+                value={values.teamCode}
+                onChange={handleInputChange}
+                onBlur={handleBlur}
               />
               <label
                 htmlFor="team-code"
@@ -47,18 +110,19 @@ const JoinTeam = (props: modalInterface) => {
                 Team Code
               </label>
             </div>
-            {/* {errors.username && touched.username ? (
+            {(errors.teamCode && touched.teamCode) || joinTeamError.type ? (
               <p className="-mb-[12px] mt-[2px] text-left text-[15px] text-red">
-                {errors.username}
+                {errors.teamCode || joinTeamError.message}
               </p>
             ) : (
               ""
-            )} */}
+            )}
           </div>
         </form>
         <div
           tabIndex={3}
           className="text-blue text-center border-[1px] w-[120px] p-[10px] mx-auto mt-[40px] rounded-[8px] transition duration-300 hover:bg-blue hover:text-white cursor-pointer"
+          onClick={handleSubmit}
         >
           Join Team
         </div>

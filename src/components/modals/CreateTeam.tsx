@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/types";
 import { setUserTeams } from "../../redux/actions/userTeams";
+import { fetchUserTeams } from "../../hooks/fetchData";
 
 interface modalInterface {
   isOpen: boolean;
@@ -18,8 +19,6 @@ const CreateTeam = (props: modalInterface) => {
     teamName: "",
     teamDescription: "",
   };
-
-  const userTeams = useSelector((state: RootState) => state.teams.userTeams);
 
   const { isOpen, onRequestClose } = props;
 
@@ -40,23 +39,16 @@ const CreateTeam = (props: modalInterface) => {
           .post(`http://localhost:4000/team/create`, values, {
             withCredentials: true,
           })
-          .then((resp) => {
+          .then(async (resp) => {
             if (resp.data.success) {
-              axios
-                .get(`http://localhost:4000/team/userTeams`, {
-                  withCredentials: true,
-                })
-                .then((resp) => {
-                  const { data } = resp;
-                  dispatch(setUserTeams(data.userTeams));
-                })
-                .catch((error) => {
-                  const { data } = error.response;
-                  setCreateTeamError({
-                    type: data.type,
-                    message: data.message,
-                  });
-                });
+              try {
+                let result = await fetchUserTeams();
+                dispatch(setUserTeams(result.data.userTeams));
+              } catch (error) {
+                if (error) {
+                  navigate("*");
+                }
+              }
               onRequestClose();
             }
           })
@@ -75,6 +67,7 @@ const CreateTeam = (props: modalInterface) => {
     });
 
   const handleInputChange = (e: ChangeEvent) => {
+    setCreateTeamError({ type: "", message: "" });
     handleChange(e);
   };
 
