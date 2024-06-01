@@ -1,7 +1,12 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 import { SET_USER_TEAMS } from "../types";
+import { userTeamsInterface } from "../../pages/dashboard/Dashboard";
 
-const initialState = {
+interface teamsInterface {
+  userTeams: userTeamsInterface[];
+}
+
+const initialState: teamsInterface = {
   userTeams: [],
 };
 

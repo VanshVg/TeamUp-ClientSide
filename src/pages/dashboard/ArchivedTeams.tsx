@@ -1,125 +1,64 @@
 import { Helmet } from "react-helmet";
-import { useEffect, useState } from "react";
-import axios from "axios";
-
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
+import { useEffect, useState } from "react";
 import { customErrorInterface } from "../auth/Register";
-import CreateTeam from "../../components/modals/CreateTeam";
-import JoinTeam from "../../components/modals/JoinTeam";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../redux/types";
-import { setUserTeams } from "../../redux/actions/userTeams";
+import { userTeamsInterface } from "./Dashboard";
+import axios from "axios";
 
-interface teamInterface {
-  id: number;
-  name: string;
-  description: string | null;
-  code: string;
-  members: number;
-  banner_url: string;
-  is_archived: boolean;
-  created_at: Date;
-  updated_at: Date;
-}
-
-export interface userTeamsInterface {
-  id: number;
-  team_id: number;
-  user_id: number;
-  role: "admin" | "member";
-  created_at: Date;
-  updated_at: Date;
-  team: teamInterface;
-}
-
-const Dashboard = () => {
-  const [isCreateTeam, setIsCreateTeam] = useState<boolean>(false);
-  const [isJoinTeam, setIsJoinTeam] = useState<boolean>(false);
-
-  const [dashboardError, setDashboardError] = useState<customErrorInterface>({
+const ArchivedTeams = () => {
+  const [archivesError, setArchivesError] = useState<customErrorInterface>({
     type: "",
     message: "",
   });
 
-  const dispatch = useDispatch();
-
-  const userTeams: userTeamsInterface[] = useSelector(
-    (state: RootState) => state.teams.userTeams
-  ) as userTeamsInterface[];
-
-  const handleCreateTeam = () => {
-    setIsCreateTeam(true);
-  };
-
-  const handleJoinTeam = () => {
-    setIsJoinTeam(true);
-  };
+  const [archivedTeams, setArchivedTeams] = useState<userTeamsInterface[]>([]);
 
   useEffect(() => {
     axios
-      .get(`http://192.168.10.72:4000/team/userTeams`, {
+      .get(`http://192.168.10.72:4000/team/archivedTeams`, {
         withCredentials: true,
       })
       .then((resp) => {
         const { data } = resp;
-        dispatch(setUserTeams(data.userTeams));
+        setArchivedTeams(data.archivedTeams);
       })
       .catch((error) => {
         const { data } = error.response;
-        setDashboardError({ type: data.type, message: data.message });
+        setArchivesError({ type: data.type, message: data.message });
       });
-  }, [CreateTeam, dispatch]);
+  }, []);
 
   return (
     <div className="h-screen">
       <Helmet>
-        <title>Dashboard</title>
+        <title>Archived Teams</title>
       </Helmet>
       <div className="dashboard-container h-screen overflow-hidden">
         <Navbar />
         <div className="flex h-screen">
           <Sidebar />
           <div className="w-[93%] overflow-y-auto pb-[100px]">
-            {dashboardError.type ? (
-              <div>{dashboardError.message}</div>
+            {archivesError.type ? (
+              <div>{archivesError.message}</div>
             ) : (
               <div>
-                {!userTeams || userTeams.length === 0 ? (
+                {archivedTeams.length === 0 ? (
                   <div>
                     <img
                       src="/background/addTeam_bg.png"
                       className="mx-auto -mt-[40px]"
                       alt=""
                     ></img>
-                    <div className="flex gap-[15px] justify-center">
-                      <div
-                        className="bg-blue p-[15px] border-[1px] border-blue text-white rounded-[8px] duration-300 ease-out hover:bg-white hover:text-blue cursor-pointer"
-                        onClick={handleCreateTeam}
-                      >
-                        Create Team
-                      </div>
-                      <div
-                        className="bg-white p-[15px] border-[1px] border-blue text-blue rounded-[8px] duration-300 ease-out hover:bg-blue hover:text-white cursor-pointer"
-                        onClick={handleJoinTeam}
-                      >
-                        Join Team
-                      </div>
+                    <div className="flex gap-[15px] text-red text-[23px] justify-center">
+                      There are no teams in archives
                     </div>
-                    <CreateTeam
-                      isOpen={isCreateTeam}
-                      onRequestClose={() => setIsCreateTeam(false)}
-                    />
-                    <JoinTeam
-                      isOpen={isJoinTeam}
-                      onRequestClose={() => setIsJoinTeam(false)}
-                    />
                   </div>
                 ) : (
                   <div className="p-[20px]">
                     <div className="flex flex-wrap mx-auto">
-                      {userTeams &&
-                        userTeams.map((element, index) => (
+                      {archivedTeams &&
+                        archivedTeams.map((element, index) => (
                           <div
                             className="w-[calc(100%/3)] p-[10px]"
                             key={index}
@@ -160,4 +99,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default ArchivedTeams;

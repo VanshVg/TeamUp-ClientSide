@@ -2,7 +2,7 @@ import { PayloadAction } from "@reduxjs/toolkit";
 import { TOGGLE_SIDEBAR, TOGGLE_TEAMS } from "../types";
 
 const initialState = {
-  isSidebarOpen: false,
+  isSidebarOpen: true,
   isTeamsOpen: false,
 };
 

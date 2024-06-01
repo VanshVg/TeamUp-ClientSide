@@ -11,6 +11,7 @@ import ErrorPage from "./pages/ErrorPage";
 import Dashboard from "./pages/dashboard/Dashboard";
 import Protect from "./components/RouteProtection/Protect";
 import { IsLoggedin } from "./components/RouteProtection/IsLoggedin";
+import ArchivedTeams from "./pages/dashboard/ArchivedTeams";
 
 function App() {
   return (
@@ -41,6 +42,10 @@ function App() {
           <Route
             path="/dashboard"
             element={<Protect Component={Dashboard} />}
+          ></Route>
+          <Route
+            path="/archived"
+            element={<Protect Component={ArchivedTeams} />}
           ></Route>
           <Route path="*" element={<ErrorPage />}></Route>
         </Routes>
