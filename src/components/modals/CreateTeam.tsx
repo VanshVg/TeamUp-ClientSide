@@ -46,7 +46,7 @@ const CreateTeam = (props: modalInterface) => {
                 dispatch(setUserTeams(result.data.userTeams));
               } catch (error) {
                 if (error) {
-                  navigate("*");
+                  navigate("/*");
                 }
               }
               onRequestClose();
@@ -55,7 +55,7 @@ const CreateTeam = (props: modalInterface) => {
           .catch((error) => {
             const { data } = error.response;
             if (data.type === "server") {
-              navigate("*");
+              navigate("/*");
             } else if (!data.success) {
               setCreateTeamError({
                 type: data.type,

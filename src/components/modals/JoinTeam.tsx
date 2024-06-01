@@ -43,7 +43,7 @@ const JoinTeam = (props: modalInterface) => {
                 dispatch(setUserTeams(result.data.userTeams));
               } catch (error) {
                 if (error) {
-                  navigate("*");
+                  navigate("/*");
                 }
               }
               onRequestClose();
@@ -52,7 +52,7 @@ const JoinTeam = (props: modalInterface) => {
           .catch((error) => {
             const { data } = error.response;
             if (data.type === "server") {
-              navigate("*");
+              navigate("/*");
             } else if (!data.success) {
               setJoinTeamError({ type: data.type, message: data.message });
             }

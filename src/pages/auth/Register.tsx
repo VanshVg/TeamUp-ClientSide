@@ -58,7 +58,7 @@ const Register = () => {
           .catch((error) => {
             const { data } = error.response;
             if (data.type === "server") {
-              navigate("*");
+              navigate("/*");
             } else if (!data.success) {
               setRegisterError({ type: data.type, message: data.message });
             }

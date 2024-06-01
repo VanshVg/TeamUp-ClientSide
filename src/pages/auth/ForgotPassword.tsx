@@ -38,7 +38,7 @@ const ForgotPassword = () => {
           .catch((error) => {
             const { data } = error.response;
             if (data.type === "server") {
-              navigate("*");
+              navigate("/*");
             } else if (!data.success) {
               setVerifyError({ type: data.type, message: data.message });
             }

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { MouseEventHandler, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { RootState } from "../redux/types";
@@ -37,7 +37,7 @@ const Sidebar = () => {
         dispatch(setUserTeams(data.userTeams));
       })
       .catch((error) => {
-        navigate("*");
+        navigate("/*");
       });
   }, [dispatch]);
 
@@ -46,6 +46,10 @@ const Sidebar = () => {
       dispatch(toggleSidebar());
     }
     dispatch(toggleTeams());
+  };
+
+  const handleTeam = (url: string): void => {
+    navigate(url);
   };
 
   const handleLogout = () => {
@@ -76,7 +80,7 @@ const Sidebar = () => {
         }
       })
       .catch(() => {
-        navigate("*");
+        navigate("/*");
       });
   };
 
@@ -118,7 +122,7 @@ const Sidebar = () => {
               </p>
             </div>
             <div className="mt-[10px]">
-              {userTeams.length < 1 ? (
+              {userTeams.length < 1 && isTeamsOpen ? (
                 <div>
                   <p className="text-red">There are no teams...</p>
                 </div>
@@ -128,13 +132,20 @@ const Sidebar = () => {
                     userTeams &&
                     userTeams.map((element, index) => (
                       <div
-                        className="flex hover:bg-lightBg w-[93%] mt-[5px] duration-300 ease-out rounded-[12px] py-[5px] -ml-[10px]"
+                        className={
+                          location.pathname !== `/team/${element["team"]["id"]}`
+                            ? `${"flex hover:bg-lightBg w-[93%] mt-[5px] duration-300 ease-out rounded-[12px] py-[5px] -ml-[10px]"}`
+                            : `${"flex bg-skyBlue w-[93%] mt-[5px] duration-300 ease-out rounded-[12px] py-[5px] -ml-[10px]"}`
+                        }
+                        onClick={() =>
+                          handleTeam(`/team/${element["team"]["id"]}`)
+                        }
                         key={index}
                       >
                         <div className="h-[25px] ml-[45px] pt-[1px] bg-blue  w-[25px] rounded-[32px] text-white text-[16px]">
                           {element["team"]["name"][0].toUpperCase()}
                         </div>
-                        <p className="ml-[92px] text-fontBlue fixed">
+                        <p className="ml-[22px] text-fontBlue">
                           {element["team"]["name"].length > 13
                             ? element["team"]["name"].slice(0, 13) + `...`
                             : element["team"]["name"]}

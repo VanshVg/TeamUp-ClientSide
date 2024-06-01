@@ -4,6 +4,7 @@ import { RootState } from "../redux/types";
 import CreateTeam from "./modals/CreateTeam";
 import { useState } from "react";
 import JoinTeam from "./modals/JoinTeam";
+import { Link, useLocation } from "react-router-dom";
 
 const Navbar = () => {
   const [isCreateTeam, setIsCreateTeam] = useState<boolean>(false);
@@ -17,6 +18,7 @@ const Navbar = () => {
   );
 
   const dispatch = useDispatch();
+  const location = useLocation();
 
   const handleCreateTeam = () => {
     setIsCreateTeam(true);
@@ -43,28 +45,39 @@ const Navbar = () => {
             alt=""
             onClick={handleMenu}
           ></img>
-          <p className="cursor-pointer">Team Up</p>
+          <Link to={"/dashboard"}>
+            <p className="cursor-pointer">Team Up</p>
+          </Link>
         </div>
-        <div className="flex justify-around w-[500px] mt-[20px]">
-          <div
-            className="flex text-fontBlue text-[18px] duration-300 ease-out cursor-pointer hover:bg-lightBg rounded-[22px] px-[10px]"
-            onClick={handleCreateTeam}
-          >
-            <img src="/icons/plus.svg" className="mt-[2px]" alt=""></img>
-            <p className="ml-[5px] mt-[8px]">CreateTeam</p>
+        {location.pathname === "/dashboard" ? (
+          <div className="flex justify-end gap-[25px] w-[500px] mt-[20px]">
+            <div
+              className="flex text-fontBlue text-[18px] duration-300 ease-out cursor-pointer hover:bg-lightBg rounded-[22px] px-[10px]"
+              onClick={handleCreateTeam}
+            >
+              <img src="/icons/plus.svg" className="mt-[2px]" alt=""></img>
+              <p className="ml-[5px] mt-[8px]">CreateTeam</p>
+            </div>
+            <div
+              className="flex text-fontBlue text-[18px] duration-300 ease-out cursor-pointer hover:bg-lightBg rounded-[22px] px-[10px]"
+              onClick={handleJoinTeam}
+            >
+              <img src="/icons/door.svg" className="mt-[2px]" alt=""></img>
+              <p className="ml-[10px] mt-[8px]">JoinTeam</p>
+            </div>
+            <div className="flex text-fontBlue text-[18px] duration-300 ease-out cursor-pointer hover:bg-lightBg rounded-[22px] px-[10px]">
+              <img src="/icons/account.svg" alt=""></img>
+              <p className="ml-[7px] mt-[8px]">Profile</p>
+            </div>
           </div>
-          <div
-            className="flex text-fontBlue text-[18px] duration-300 ease-out cursor-pointer hover:bg-lightBg rounded-[22px] px-[10px]"
-            onClick={handleJoinTeam}
-          >
-            <img src="/icons/door.svg" className="mt-[2px]" alt=""></img>
-            <p className="ml-[10px] mt-[8px]">JoinTeam</p>
+        ) : (
+          <div className="flex justify-end w-[500px] mt-[20px]">
+            <div className="flex text-fontBlue text-[18px] duration-300 ease-out cursor-pointer hover:bg-lightBg rounded-[22px] px-[10px]">
+              <img src="/icons/account.svg" alt=""></img>
+              <p className="ml-[7px] mt-[8px]">Profile</p>
+            </div>
           </div>
-          <div className="flex text-fontBlue text-[18px] duration-300 ease-out cursor-pointer hover:bg-lightBg rounded-[22px] px-[10px]">
-            <img src="/icons/account.svg" className="mt-[2px]" alt=""></img>
-            <p className="ml-[7px] mt-[8px]">Profile</p>
-          </div>
-        </div>
+        )}
       </div>
       <CreateTeam
         isOpen={isCreateTeam}

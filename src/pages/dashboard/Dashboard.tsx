@@ -10,8 +10,9 @@ import JoinTeam from "../../components/modals/JoinTeam";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/types";
 import { setUserTeams } from "../../redux/actions/userTeams";
+import { Link } from "react-router-dom";
 
-interface teamInterface {
+export interface teamInterface {
   id: number;
   name: string;
   description: string | null;
@@ -127,14 +128,17 @@ const Dashboard = () => {
                             <div className="relative rounded-t-[8px]">
                               <img
                                 src={`${element["team"]["banner_url"]}.jpg`}
-                                className="rounded-t-[8px]"
+                                className="rounded-t-[8px] w-full"
                                 alt=""
                               ></img>
-                              <h2 className="text-fontBlue absolute text-[25px] top-[58%] right-2 text-left hover:underline cursor-pointer">
-                                {element["team"]["name"].length > 13
-                                  ? element["team"]["name"].slice(0, 13) + `...`
-                                  : element["team"]["name"]}
-                              </h2>
+                              <Link to={`/team/${element["team"]["id"]}`}>
+                                <h2 className="text-fontBlue absolute text-[25px] bottom-[2%] right-2 text-left hover:underline cursor-pointer">
+                                  {element["team"]["name"].length > 13
+                                    ? element["team"]["name"].slice(0, 13) +
+                                      `...`
+                                    : element["team"]["name"]}
+                                </h2>
+                              </Link>
                               <img
                                 src="/icons/three-dots.svg"
                                 className="absolute right-0 top-1 cursor-pointer"
