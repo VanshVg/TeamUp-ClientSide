@@ -47,9 +47,7 @@ const Register = () => {
       validationSchema: register,
       onSubmit: (values) => {
         axios
-          .post(`http://localhost:4000/auth/register`, values, {
-            withCredentials: true,
-          })
+          .post(`http://192.168.10.72:4000/auth/register`, values)
           .then((response) => {
             const { data } = response;
             if (data.success) {
@@ -318,8 +316,8 @@ const Register = () => {
             </div>
             <div className="text-link hover:underline mt-[5px] -mb-[15px]">
               {activation ? (
-                <Link to={`http://localhost:3000/activation/${activation}`}>
-                  http://localhost:3000/activation/{activation}
+                <Link to={`http://192.168.10.72:3000/activation/${activation}`}>
+                  http://192.168.10.72:3000/activation/{activation}
                 </Link>
               ) : (
                 ""

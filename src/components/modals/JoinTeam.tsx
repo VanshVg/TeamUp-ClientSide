@@ -33,7 +33,7 @@ const JoinTeam = (props: modalInterface) => {
       validationSchema: joinTeam,
       onSubmit: (values) => {
         axios
-          .post(`http://localhost:4000/team/join`, values, {
+          .post(`http://192.168.10.72:4000/team/join`, values, {
             withCredentials: true,
           })
           .then(async (resp) => {

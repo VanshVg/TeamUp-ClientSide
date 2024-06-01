@@ -39,7 +39,7 @@ const ChangePassword = () => {
 
   useEffect(() => {
     axios
-      .post(`http://localhost:4000/auth/verifyToken/${params.token}`, {
+      .post(`http://192.168.10.72:4000/auth/verifyToken/${params.token}`, {
         username: username,
       })
       .catch((error) => {
@@ -62,7 +62,7 @@ const ChangePassword = () => {
           username: username,
         };
         axios
-          .put(`http://localhost:4000/auth/password`, userData)
+          .put(`http://192.168.10.72:4000/auth/password`, userData)
           .then((resp) => {
             if (resp.data.success) {
               Swal.fire({

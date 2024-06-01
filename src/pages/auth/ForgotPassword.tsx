@@ -29,7 +29,7 @@ const ForgotPassword = () => {
       validationSchema: forgotPassword,
       onSubmit: (values) => {
         axios
-          .post(`http://localhost:4000/auth/verify`, values)
+          .post(`http://192.168.10.72:4000/auth/verify`, values)
           .then((resp) => {
             if (resp.data.success) {
               setResetToken(resp.data.reset_token);

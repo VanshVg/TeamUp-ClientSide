@@ -33,7 +33,7 @@ const Login = () => {
       validationSchema: login,
       onSubmit: (values) => {
         axios
-          .post(`http://localhost:4000/auth/login`, values)
+          .post(`http://192.168.10.72:4000/auth/login`, values)
           .then((response) => {
             console.log(response);
             const { data } = response;

@@ -58,7 +58,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:4000/team/userTeams`, {
+      .get(`http://192.168.10.72:4000/team/userTeams`, {
         withCredentials: true,
       })
       .then((resp) => {
