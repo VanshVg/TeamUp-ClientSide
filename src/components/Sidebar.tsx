@@ -171,16 +171,18 @@ const Sidebar = () => {
               </p>
             </div>
           </Link>
-          <div
-            className={`${
-              location.pathname === "/settings"
-                ? "mt-[15px] rounded-[12px] -ml-[10px] py-[2px] cursor-pointer flex max-w-[95%] bg-skyBlue"
-                : "mt-[15px] rounded-[12px] -ml-[10px] py-[2px] cursor-pointer flex duration-300 ease-out hover:bg-lightBg max-w-[95%]"
-            }`}
-          >
-            <img src="/icons/settings.svg" className="ml-[45px]" alt="" />
-            <p className="ml-[15px] text-[18px] text-fontBlue">Settings</p>
-          </div>
+          <Link to={"/settings"}>
+            <div
+              className={`${
+                location.pathname === "/settings"
+                  ? "mt-[15px] rounded-[12px] -ml-[10px] py-[2px] cursor-pointer flex max-w-[95%] bg-skyBlue"
+                  : "mt-[15px] rounded-[12px] duration-300 ease-out -ml-[10px] py-[2px] cursor-pointer flex hover:bg-lightBg max-w-[95%]"
+              }`}
+            >
+              <img src="/icons/settings.svg" className="ml-[45px]" alt="" />
+              <p className="ml-[15px] text-[18px] text-fontBlue">Settings</p>
+            </div>
+          </Link>
           <div
             className="mt-[15px] rounded-[12px] -ml-[10px] py-[2px] cursor-pointer flex duration-300 ease-out hover:bg-lightBg max-w-[95%]"
             onClick={handleLogout}
@@ -252,6 +254,7 @@ const Sidebar = () => {
                   ? "mt-[14px] rounded-[12px] -ml-[10px] py-[4px] cursor-pointer flex max-w-[95%] bg-skyBlue"
                   : "mt-[14px] rounded-[12px] -ml-[10px] py-[4px] cursor-pointer flex duration-300 ease-out hover:bg-lightBg max-w-[95%]"
               }`}
+              onClick={() => navigate("/settings")}
             >
               <img src="/icons/settings.svg" className="ml-[45px]" alt="" />
             </div>
