@@ -203,7 +203,7 @@ const Dashboard = () => {
                                   onMouseLeave={closeSubMenu}
                                 ></img>
                                 <div
-                                  className={`absolute bg-white z-50 py-[10px] -right-5 top-6 shadow-[2px_2px_2px_2px_gray] rounded-[8px] submenu${index}`}
+                                  className={`absolute bg-white z-50 -right-5 top-6 shadow-[2px_2px_2px_2px_gray] rounded-[8px] submenu${index}`}
                                   id={`submenu${index}`}
                                   style={{ display: "none" }}
                                   onMouseEnter={openSubMenu}
@@ -212,7 +212,7 @@ const Dashboard = () => {
                                   <Link
                                     to={`/team/${element["team"]["id"]}/edit`}
                                   >
-                                    <div className="flex hover:bg-gray px-[7px] py-[2px] cursor-pointer ease-out duration-200">
+                                    <div className="flex hover:bg-gray px-[7px] py-[2px] pt-[5px] cursor-pointer rounded-tl-[8px] rounded-tr-[8px] ease-out duration-200">
                                       <img
                                         src="/icons/edit.svg"
                                         alt=""
@@ -224,7 +224,7 @@ const Dashboard = () => {
                                     </div>
                                   </Link>
                                   <div
-                                    className="flex hover:bg-gray px-[7px] py-[2px] mt-[7px] cursor-pointer ease-out duration-200"
+                                    className="flex hover:bg-gray px-[7px] py-[2px] pt-[5px] mt-[7px] cursor-pointer ease-out duration-200"
                                     onClick={() =>
                                       handleArchive(element["team"]["id"])
                                     }
@@ -238,7 +238,7 @@ const Dashboard = () => {
                                       Add to archives
                                     </p>
                                   </div>
-                                  <div className="flex hover:bg-gray px-[7px] py-[2px] mt-[7px] cursor-pointer ease-out duration-200">
+                                  <div className="flex hover:bg-gray px-[7px] py-[2px] pt-[5px] mt-[7px] cursor-pointer rounded-bl-[8px] rounded-br-[8px]  ease-out duration-200">
                                     <img
                                       src="/icons/bin.svg"
                                       alt=""
