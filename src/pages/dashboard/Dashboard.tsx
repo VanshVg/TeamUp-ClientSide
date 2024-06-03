@@ -1,5 +1,5 @@
 import { Helmet } from "react-helmet";
-import { useEffect, useState } from "react";
+import { MouseEvent, MouseEventHandler, useEffect, useState } from "react";
 import axios from "axios";
 
 import Navbar from "../../components/Navbar";
@@ -10,7 +10,8 @@ import JoinTeam from "../../components/modals/JoinTeam";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/types";
 import { setUserTeams } from "../../redux/actions/userTeams";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 export interface teamInterface {
   id: number;
@@ -37,24 +38,58 @@ export interface userTeamsInterface {
 const Dashboard = () => {
   const [isCreateTeam, setIsCreateTeam] = useState<boolean>(false);
   const [isJoinTeam, setIsJoinTeam] = useState<boolean>(false);
-
   const [dashboardError, setDashboardError] = useState<customErrorInterface>({
     type: "",
     message: "",
   });
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const userTeams: userTeamsInterface[] = useSelector(
     (state: RootState) => state.teams.userTeams
   ) as userTeamsInterface[];
 
-  const handleCreateTeam = () => {
-    setIsCreateTeam(true);
-  };
-
-  const handleJoinTeam = () => {
-    setIsJoinTeam(true);
+  const handleArchive = (id: number) => {
+    Swal.fire({
+      title: "Archive Confirmation",
+      text: "Are sure you want to add this team to archives?",
+      icon: "warning",
+      showConfirmButton: true,
+      showCancelButton: true,
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes",
+      confirmButtonColor: "#2554c7",
+      color: "#28183b",
+      showLoaderOnConfirm: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .put(
+            `http://192.168.10.72:4000/team/archive/${id}`,
+            {},
+            { withCredentials: true }
+          )
+          .then((resp) => {
+            if (resp.data.success) {
+              Swal.fire({
+                title: "Added to archives",
+                icon: "success",
+                showConfirmButton: false,
+                timer: 2000,
+              }).then(() => {
+                navigate("/dashboard");
+              });
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+            if (error) {
+              navigate("/*");
+            }
+          });
+      }
+    });
   };
 
   useEffect(() => {
@@ -70,7 +105,27 @@ const Dashboard = () => {
         const { data } = error.response;
         setDashboardError({ type: data.type, message: data.message });
       });
-  }, [CreateTeam, dispatch]);
+  }, [CreateTeam, dispatch, handleArchive]);
+
+  const handleCreateTeam = () => {
+    setIsCreateTeam(true);
+  };
+
+  const handleJoinTeam = () => {
+    setIsJoinTeam(true);
+  };
+
+  const openSubMenu = (e: MouseEvent<HTMLElement>) => {
+    const divId: string =
+      e.currentTarget.classList[e.currentTarget.classList.length - 1];
+    (document.getElementById(divId) as HTMLElement).style.display = "block";
+  };
+
+  const closeSubMenu = (e: MouseEvent<HTMLElement>) => {
+    const divId: string =
+      e.currentTarget.classList[e.currentTarget.classList.length - 1];
+    (document.getElementById(divId) as HTMLElement).style.display = "none";
+  };
 
   return (
     <div className="h-screen">
@@ -139,11 +194,62 @@ const Dashboard = () => {
                                     : element["team"]["name"]}
                                 </h2>
                               </Link>
-                              <img
-                                src="/icons/three-dots.svg"
-                                className="absolute right-0 top-1 cursor-pointer"
-                                alt=""
-                              ></img>
+                              <div>
+                                <img
+                                  src="/icons/three-dots.svg"
+                                  className={`absolute right-0 top-1 cursor-pointer submenu${index}`}
+                                  alt=""
+                                  onMouseEnter={openSubMenu}
+                                  onMouseLeave={closeSubMenu}
+                                ></img>
+                                <div
+                                  className={`absolute bg-white z-50 py-[10px] -right-5 top-6 shadow-[2px_2px_2px_2px_gray] rounded-[8px] submenu${index}`}
+                                  id={`submenu${index}`}
+                                  style={{ display: "none" }}
+                                  onMouseEnter={openSubMenu}
+                                  onMouseLeave={closeSubMenu}
+                                >
+                                  <Link
+                                    to={`/team/${element["team"]["id"]}/edit`}
+                                  >
+                                    <div className="flex hover:bg-gray px-[7px] py-[2px] cursor-pointer ease-out duration-200">
+                                      <img
+                                        src="/icons/edit.svg"
+                                        alt=""
+                                        className="h-[18px]"
+                                      ></img>
+                                      <p className="text-left text-[15px] ml-[8px] -mt-[2px] text-fontBlue">
+                                        Edit team
+                                      </p>
+                                    </div>
+                                  </Link>
+                                  <div
+                                    className="flex hover:bg-gray px-[7px] py-[2px] mt-[7px] cursor-pointer ease-out duration-200"
+                                    onClick={() =>
+                                      handleArchive(element["team"]["id"])
+                                    }
+                                  >
+                                    <img
+                                      src="/icons/archived-orange.svg"
+                                      alt=""
+                                      className="h-[18px]"
+                                    ></img>
+                                    <p className="text-left text-[15px] ml-[8px] -mt-[2px] text-fontBlue">
+                                      Add to archives
+                                    </p>
+                                  </div>
+                                  <div className="flex hover:bg-gray px-[7px] py-[2px] mt-[7px] cursor-pointer ease-out duration-200">
+                                    <img
+                                      src="/icons/bin.svg"
+                                      alt=""
+                                      className="h-[18px]"
+                                    ></img>
+                                    <p className="text-left text-[15px] ml-[8px] -mt-[2px] text-fontBlue">
+                                      Delete team
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
                             <div className="text-left border-[1px] border-[gray] rounded-b-[8px] -mt-[1px] h-[200px]">
                               <div className="mt-[5px] ml-[4px] h-[70%] text-fontBlue"></div>

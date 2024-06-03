@@ -1,4 +1,4 @@
-import { MouseEventHandler, useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { RootState } from "../redux/types";

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { customErrorInterface } from "../auth/Register";
-import { teamInterface } from "./Dashboard";
+import { teamInterface } from "../dashboard/Dashboard";
 
 const Team = () => {
   const [teamData, setTeamData] = useState<teamInterface>();
