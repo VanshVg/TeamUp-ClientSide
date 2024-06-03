@@ -92,6 +92,45 @@ const Dashboard = () => {
     });
   };
 
+  const handleDeleteTeam = (id: number) => {
+    Swal.fire({
+      title: "Archive Confirmation",
+      text: "Are sure you want to delete this team?",
+      icon: "warning",
+      showConfirmButton: true,
+      showCancelButton: true,
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes",
+      confirmButtonColor: "#2554c7",
+      color: "#28183b",
+      showLoaderOnConfirm: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete(`http://192.168.10.72:4000/team/remove/${id}`, {
+            withCredentials: true,
+          })
+          .then((resp) => {
+            if (resp.data.success) {
+              Swal.fire({
+                title: "Team deleted successfully",
+                icon: "success",
+                showConfirmButton: false,
+                timer: 2000,
+              }).then(() => {
+                navigate("/dashboard");
+              });
+            }
+          })
+          .catch((error) => {
+            if (error) {
+              navigate("/*");
+            }
+          });
+      }
+    });
+  };
+
   useEffect(() => {
     axios
       .get(`http://192.168.10.72:4000/team/userTeams`, {
@@ -105,7 +144,7 @@ const Dashboard = () => {
         const { data } = error.response;
         setDashboardError({ type: data.type, message: data.message });
       });
-  }, [CreateTeam, dispatch, handleArchive]);
+  }, [CreateTeam, dispatch, handleArchive, handleDeleteTeam]);
 
   const handleCreateTeam = () => {
     setIsCreateTeam(true);
@@ -238,7 +277,12 @@ const Dashboard = () => {
                                       Add to archives
                                     </p>
                                   </div>
-                                  <div className="flex hover:bg-gray px-[7px] py-[2px] pt-[5px] mt-[7px] cursor-pointer rounded-bl-[8px] rounded-br-[8px]  ease-out duration-200">
+                                  <div
+                                    className="flex hover:bg-gray px-[7px] py-[2px] pt-[5px] mt-[7px] cursor-pointer rounded-bl-[8px] rounded-br-[8px]  ease-out duration-200"
+                                    onClick={() =>
+                                      handleDeleteTeam(element["team"]["id"])
+                                    }
+                                  >
                                     <img
                                       src="/icons/bin.svg"
                                       alt=""
