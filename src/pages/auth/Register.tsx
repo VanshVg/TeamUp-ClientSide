@@ -51,7 +51,10 @@ const Register = () => {
           .then((response) => {
             const { data } = response;
             if (data.success) {
-              cookies.set("token", data.token, { path: "/" });
+              cookies.set("token", data.token, {
+                path: "/",
+                expires: new Date(Date.now() + 2592000),
+              });
               setActivation(data.verification_token);
             }
           })

@@ -67,7 +67,7 @@ const Sidebar = () => {
     })
       .then((result) => {
         if (result.isConfirmed) {
-          cookies.remove("token");
+          cookies.remove("token", { path: "/" });
           Swal.fire({
             title: "Logout Successful",
             text: "Logout Successful",
