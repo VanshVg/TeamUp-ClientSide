@@ -50,7 +50,6 @@ const ArchivedTeams = () => {
             }
           })
           .catch((error) => {
-            console.log(error);
             if (error) {
               navigate("/*");
             }

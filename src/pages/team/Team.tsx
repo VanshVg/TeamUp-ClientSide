@@ -62,7 +62,6 @@ const Team = () => {
   };
 
   useEffect(() => {
-    console.log("Inside");
     axios
       .get(`http://192.168.10.72:4000/team/get/${params.id}}`, {
         withCredentials: true,
@@ -234,7 +233,9 @@ const Team = () => {
                       {teamData?.members}
                     </p>
                     <p className="mt-auto mb-[8px] text-orange text-[13px] hover:underline cursor-pointer">
-                      Show members
+                      <Link to={`/team/${teamData?.id}/members`}>
+                        Show members
+                      </Link>
                     </p>
                   </div>
                 </div>

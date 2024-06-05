@@ -8,7 +8,7 @@ import updateProfileSchema from "../schemas/updateProfile";
 import Cookies, { Cookie } from "universal-cookie";
 import Swal from "sweetalert2";
 
-interface userInterface {
+export interface userInterface {
   first_name: string;
   last_name: string;
   username: string;

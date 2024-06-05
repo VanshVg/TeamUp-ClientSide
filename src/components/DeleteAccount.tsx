@@ -32,7 +32,6 @@ const DeleteAccount = () => {
             withCredentials: true,
           })
           .then((resp) => {
-            console.log(resp);
             if (resp.data.success) {
               cookies.remove("token", { path: "/" });
               Swal.fire({

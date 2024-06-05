@@ -35,7 +35,6 @@ const Login = () => {
         axios
           .post(`http://192.168.10.72:4000/auth/login`, values)
           .then((response) => {
-            console.log(response);
             const { data } = response;
             if (data.success) {
               cookies.set("token", data.token, {

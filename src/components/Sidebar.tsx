@@ -133,7 +133,9 @@ const Sidebar = () => {
                     userTeams.map((element, index) => (
                       <div
                         className={
-                          location.pathname !== `/team/${element["team"]["id"]}`
+                          !location.pathname.includes(
+                            `/team/${element["team"]["id"]}`
+                          )
                             ? `${"flex hover:bg-lightBg w-[93%] mt-[5px] duration-300 ease-out rounded-[12px] py-[5px] -ml-[10px]"}`
                             : `${"flex bg-skyBlue w-[93%] mt-[5px] duration-300 ease-out rounded-[12px] py-[5px] -ml-[10px]"}`
                         }

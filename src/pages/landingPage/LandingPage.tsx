@@ -6,8 +6,6 @@ const LandingPage = () => {
   const cookies: Cookies = new Cookies();
 
   const token = cookies.get("token");
-  console.log(token);
-  console.log(cookies.getAll());
   return (
     <>
       <Helmet>
