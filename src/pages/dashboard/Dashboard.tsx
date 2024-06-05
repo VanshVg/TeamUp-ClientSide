@@ -42,6 +42,8 @@ const Dashboard = () => {
     type: "",
     message: "",
   });
+  const [archive, setArchive] = useState<boolean>(false);
+  const [deleteTeam, setDeleteTeam] = useState<boolean>(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -72,6 +74,7 @@ const Dashboard = () => {
           )
           .then((resp) => {
             if (resp.data.success) {
+              setArchive(!archive);
               Swal.fire({
                 title: "Added to archives",
                 icon: "success",
@@ -93,7 +96,7 @@ const Dashboard = () => {
 
   const handleDeleteTeam = (id: number) => {
     Swal.fire({
-      title: "Archive Confirmation",
+      title: "Delete Confirmation",
       text: "Are sure you want to delete this team?",
       icon: "warning",
       showConfirmButton: true,
@@ -111,6 +114,7 @@ const Dashboard = () => {
           })
           .then((resp) => {
             if (resp.data.success) {
+              setDeleteTeam(!deleteTeam);
               Swal.fire({
                 title: "Team deleted successfully",
                 icon: "success",
@@ -143,7 +147,7 @@ const Dashboard = () => {
         const { data } = error.response;
         setDashboardError({ type: data.type, message: data.message });
       });
-  }, [CreateTeam, dispatch, handleArchive, handleDeleteTeam]);
+  }, [CreateTeam, dispatch, archive, deleteTeam]);
 
   const handleCreateTeam = () => {
     setIsCreateTeam(true);
@@ -250,19 +254,27 @@ const Dashboard = () => {
                                   <Link
                                     to={`/team/${element["team"]["id"]}/edit`}
                                   >
-                                    <div className="flex hover:bg-gray px-[7px] py-[2px] pt-[5px] cursor-pointer rounded-tl-[8px] rounded-tr-[8px] ease-out duration-200">
-                                      <img
-                                        src="/icons/edit.svg"
-                                        alt=""
-                                        className="h-[18px]"
-                                      ></img>
-                                      <p className="text-left text-[15px] ml-[8px] -mt-[2px] text-fontBlue">
-                                        Edit team
-                                      </p>
-                                    </div>
+                                    {element.role === "admin" ? (
+                                      <div className="flex hover:bg-gray px-[7px] py-[2px] pt-[5px] cursor-pointer rounded-tl-[8px] rounded-tr-[8px] ease-out duration-200 mb-[7px]">
+                                        <img
+                                          src="/icons/edit.svg"
+                                          alt=""
+                                          className="h-[18px]"
+                                        ></img>
+                                        <p className="text-left text-[15px] ml-[8px] -mt-[2px] text-fontBlue">
+                                          Edit team
+                                        </p>
+                                      </div>
+                                    ) : (
+                                      ""
+                                    )}
                                   </Link>
                                   <div
-                                    className="flex hover:bg-gray px-[7px] py-[2px] pt-[5px] mt-[7px] cursor-pointer ease-out duration-200"
+                                    className={
+                                      element.role === "admin"
+                                        ? `flex hover:bg-gray px-[7px] py-[2px] pt-[5px]  cursor-pointer ease-out duration-200`
+                                        : `flex hover:bg-gray px-[7px] py-[2px] pt-[5px]  cursor-pointer ease-out duration-200 rounded-[8px]`
+                                    }
                                     onClick={() =>
                                       handleArchive(element["team"]["id"])
                                     }
@@ -276,21 +288,25 @@ const Dashboard = () => {
                                       Add to archives
                                     </p>
                                   </div>
-                                  <div
-                                    className="flex hover:bg-gray px-[7px] py-[2px] pt-[5px] mt-[7px] cursor-pointer rounded-bl-[8px] rounded-br-[8px]  ease-out duration-200"
-                                    onClick={() =>
-                                      handleDeleteTeam(element["team"]["id"])
-                                    }
-                                  >
-                                    <img
-                                      src="/icons/bin.svg"
-                                      alt=""
-                                      className="h-[18px]"
-                                    ></img>
-                                    <p className="text-left text-[15px] ml-[8px] -mt-[2px] text-fontBlue">
-                                      Delete team
-                                    </p>
-                                  </div>
+                                  {element.role === "admin" ? (
+                                    <div
+                                      className="flex hover:bg-gray px-[7px] py-[2px] pt-[5px] mt-[7px] cursor-pointer rounded-bl-[8px] rounded-br-[8px]  ease-out duration-200"
+                                      onClick={() =>
+                                        handleDeleteTeam(element["team"]["id"])
+                                      }
+                                    >
+                                      <img
+                                        src="/icons/bin.svg"
+                                        alt=""
+                                        className="h-[18px]"
+                                      ></img>
+                                      <p className="text-left text-[15px] ml-[8px] -mt-[2px] text-fontBlue">
+                                        Delete team
+                                      </p>
+                                    </div>
+                                  ) : (
+                                    ""
+                                  )}
                                 </div>
                               </div>
                             </div>

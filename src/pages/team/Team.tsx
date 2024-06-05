@@ -5,13 +5,30 @@ import { MouseEvent, useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { customErrorInterface } from "../auth/Register";
-import { teamInterface } from "../dashboard/Dashboard";
 import { Snackbar, Tooltip } from "@mui/material";
 import CopyToClipboard from "react-copy-to-clipboard";
 import Swal from "sweetalert2";
 
+interface teamMembersInterface {
+  user_id: number;
+  team_id: number;
+  role: string;
+}
+
+interface userTeamsInterface {
+  id: number;
+  name: string;
+  description: string | null;
+  code: string;
+  members: number;
+  banner_url: string;
+  is_archived: boolean;
+  created_at: string;
+  team_has_members: teamMembersInterface[];
+}
+
 const Team = () => {
-  const [teamData, setTeamData] = useState<teamInterface>();
+  const [teamData, setTeamData] = useState<userTeamsInterface>();
   const [teamError, setTeamError] = useState<customErrorInterface>({
     type: "",
     message: "",
@@ -39,7 +56,7 @@ const Team = () => {
         axios
           .put(
             `http://192.168.10.72:4000/team/resetCode/${
-              (teamData as teamInterface).id
+              (teamData as userTeamsInterface).id
             }`,
             {},
             { withCredentials: true }
@@ -63,7 +80,7 @@ const Team = () => {
 
   useEffect(() => {
     axios
-      .get(`http://192.168.10.72:4000/team/get/${params.id}}`, {
+      .get(`http://192.168.10.72:4000/team/get/${params.id}`, {
         withCredentials: true,
       })
       .then((resp) => {
@@ -127,7 +144,6 @@ const Team = () => {
       }
     });
   };
-
   return (
     <div className="h-screen">
       <Helmet>
@@ -161,72 +177,84 @@ const Team = () => {
                 onMouseEnter={openSubMenu}
                 onMouseLeave={closeSubMenu}
               >
-                <Link to={`/team/${teamData?.id}/edit`}>
-                  <div className="flex hover:bg-gray px-[7px] py-[2px] pt-[5px] cursor-pointer rounded-tl-[8px] rounded-tr-[8px] ease-out duration-200">
-                    <img
-                      src="/icons/edit.svg"
-                      alt=""
-                      className="h-[18px]"
-                    ></img>
+                {teamData?.team_has_members[0].role === "admin" ? (
+                  <Link to={`/team/${teamData?.id}/edit`}>
+                    <div className="flex hover:bg-gray px-[7px] py-[2px] pt-[5px] cursor-pointer rounded-tl-[8px] rounded-tr-[8px] ease-out duration-200">
+                      <img
+                        src="/icons/edit.svg"
+                        alt=""
+                        className="h-[18px]"
+                      ></img>
+                      <p className="text-left text-[15px] ml-[8px] -mt-[2px] text-fontBlue">
+                        Edit team
+                      </p>
+                    </div>
+                  </Link>
+                ) : (
+                  ""
+                )}
+                {teamData?.team_has_members[0].role === "admin" ? (
+                  <div
+                    className="flex hover:bg-gray px-[7px] py-[2px] pt-[5px] mt-[7px] cursor-pointer rounded-bl-[8px] rounded-br-[8px]  ease-out duration-200"
+                    onClick={() =>
+                      handleDeleteTeam((teamData as userTeamsInterface).id)
+                    }
+                  >
+                    <img src="/icons/bin.svg" alt="" className="h-[18px]"></img>
                     <p className="text-left text-[15px] ml-[8px] -mt-[2px] text-fontBlue">
-                      Edit team
+                      Delete team
                     </p>
                   </div>
-                </Link>
-                <div
-                  className="flex hover:bg-gray px-[7px] py-[2px] pt-[5px] mt-[7px] cursor-pointer rounded-bl-[8px] rounded-br-[8px]  ease-out duration-200"
-                  onClick={() =>
-                    handleDeleteTeam((teamData as teamInterface).id)
-                  }
-                >
-                  <img src="/icons/bin.svg" alt="" className="h-[18px]"></img>
-                  <p className="text-left text-[15px] ml-[8px] -mt-[2px] text-fontBlue">
-                    Delete team
-                  </p>
-                </div>
+                ) : (
+                  ""
+                )}
               </div>
             </div>
             <div className="flex mt-[20px] w-[80%] mx-auto">
               <div className="w-[30%]">
-                <div className="border-[1px] relative border-gray p-[10px] rounded-[5px]">
-                  <div className="flex justify-between">
-                    <p className="text-blue text-left">Team Code</p>
-                    <Tooltip title="Reset Code">
-                      <img
-                        src="/icons/reset.svg"
-                        className="cursor-pointer hover:bg-gray p-[8px] rounded-[22px] -mt-[8px]"
-                        alt=""
-                        onClick={handleResetCode}
-                      ></img>
-                    </Tooltip>
-                  </div>
-                  <div className="flex justify-between">
-                    <p className="text-left mt-[10px] text-[30px] text-fontBlue">
-                      {teamData?.code}
-                    </p>
-                    <CopyToClipboard
-                      text={teamData?.code as string}
-                      onCopy={() => {
-                        setOpenSnackbar(true);
-                      }}
-                    >
-                      <Tooltip title="Copy Code">
+                {teamData?.team_has_members[0].role === "admin" ? (
+                  <div className="border-[1px] relative border-gray p-[10px] mb-[30px] rounded-[5px]">
+                    <div className="flex justify-between">
+                      <p className="text-blue text-left">Team Code</p>
+                      <Tooltip title="Reset Code">
                         <img
-                          src="/icons/copy.svg"
+                          src="/icons/reset.svg"
+                          className="cursor-pointer hover:bg-gray p-[8px] rounded-[22px] -mt-[8px]"
                           alt=""
-                          className="mt-[8px] hover:bg-gray p-[12px] rounded-[32px] cursor-pointer"
-                        />
+                          onClick={handleResetCode}
+                        ></img>
                       </Tooltip>
-                    </CopyToClipboard>
-                    <Snackbar
-                      open={openSnackbar}
-                      autoHideDuration={4000}
-                      onClose={() => setOpenSnackbar(false)}
-                      message="Team code copied to clipboard"
-                    ></Snackbar>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="text-left mt-[10px] text-[30px] text-fontBlue">
+                        {teamData?.code}
+                      </p>
+                      <CopyToClipboard
+                        text={teamData?.code as string}
+                        onCopy={() => {
+                          setOpenSnackbar(true);
+                        }}
+                      >
+                        <Tooltip title="Copy Code">
+                          <img
+                            src="/icons/copy.svg"
+                            alt=""
+                            className="mt-[8px] hover:bg-gray p-[12px] rounded-[32px] cursor-pointer"
+                          />
+                        </Tooltip>
+                      </CopyToClipboard>
+                      <Snackbar
+                        open={openSnackbar}
+                        autoHideDuration={4000}
+                        onClose={() => setOpenSnackbar(false)}
+                        message="Team code copied to clipboard"
+                      ></Snackbar>
+                    </div>
                   </div>
-                </div>
-                <div className="border-[1px] border-gray p-[10px] mt-[30px] rounded-[5px]">
+                ) : (
+                  ""
+                )}
+                <div className="border-[1px] border-gray p-[10px] rounded-[5px]">
                   <p className="text-blue text-left">Team Members</p>
                   <div className="flex justify-between mt-[10px]">
                     <p className="text-left text-[30px] text-fontBlue">

@@ -14,6 +14,7 @@ const ArchivedTeams = () => {
     message: "",
   });
   const [archivedTeams, setArchivedTeams] = useState<userTeamsInterface[]>([]);
+  const [archive, setArchive] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
@@ -39,6 +40,7 @@ const ArchivedTeams = () => {
           )
           .then((resp) => {
             if (resp.data.success) {
+              setArchive(!archive);
               Swal.fire({
                 title: "Removed from archives",
                 icon: "success",
@@ -71,7 +73,7 @@ const ArchivedTeams = () => {
         const { data } = error.response;
         setArchivesError({ type: data.type, message: data.message });
       });
-  }, [handleArchive]);
+  }, [archive]);
 
   const openSubMenu = (e: MouseEvent<HTMLElement>) => {
     const divId: string =
@@ -149,7 +151,7 @@ const ArchivedTeams = () => {
                                   onMouseLeave={closeSubMenu}
                                 >
                                   <div
-                                    className="flex hover:bg-gray px-[7px] py-[5px] pt-[7px] cursor-pointer rounded-[8px] ease-out duration-200"
+                                    className="flex hover:bg-gray px-[7px] pt-[7px] cursor-pointer rounded-[8px] ease-out duration-200"
                                     onClick={() =>
                                       handleArchive(element["team"]["id"])
                                     }

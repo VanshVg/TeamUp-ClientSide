@@ -53,7 +53,7 @@ const Register = () => {
             if (data.success) {
               cookies.set("token", data.token, {
                 path: "/",
-                expires: new Date(Date.now() + 2592000),
+                expires: new Date(Date.now() + 2592000000),
               });
               setActivation(data.verification_token);
             }
