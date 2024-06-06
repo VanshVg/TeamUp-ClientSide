@@ -12,6 +12,7 @@ module.exports = {
       lightBg: "#f2eeee",
       skyBlue: "#d9f5ff",
       gray: "#d3d3d3",
+      lightGray: "#f3f2f2",
     },
     extend: {},
   },

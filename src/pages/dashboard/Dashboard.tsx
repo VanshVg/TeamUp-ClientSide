@@ -252,7 +252,7 @@ const Dashboard = () => {
                                   onMouseLeave={closeSubMenu}
                                 >
                                   <Link
-                                    to={`/team/${element["team"]["id"]}/edit`}
+                                    to={`/team/${element["team"]["id"]}/about`}
                                   >
                                     {element.role === "admin" ? (
                                       <div className="flex hover:bg-gray px-[7px] py-[2px] pt-[5px] cursor-pointer rounded-tl-[8px] rounded-tr-[8px] ease-out duration-200 mb-[7px]">

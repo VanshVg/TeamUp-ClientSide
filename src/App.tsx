@@ -13,9 +13,10 @@ import Protect from "./components/routeProtection/Protect";
 import { IsLoggedin } from "./components/routeProtection/IsLoggedin";
 import ArchivedTeams from "./pages/dashboard/ArchivedTeams";
 import Team from "./pages/team/Team";
-import EditTeam from "./pages/team/EditTeam";
 import Settings from "./pages/dashboard/Settings";
 import TeamMembers from "./pages/team/TeamMembers";
+import About from "./pages/team/About";
+import Assignments from "./pages/team/Assignments";
 
 function App() {
   return (
@@ -55,8 +56,9 @@ function App() {
             path="/team/:id"
             element={<Protect Component={Team} />}
           ></Route>
-          <Route path="/team/:id/edit" element={<EditTeam />}></Route>
+          <Route path="/team/:id/assignments" element={<Assignments />}></Route>
           <Route path="/team/:id/members" element={<TeamMembers />}></Route>
+          <Route path="/team/:id/about" element={<About />}></Route>
           <Route path="/settings" element={<Settings />}></Route>
           <Route path="*" element={<ErrorPage />}></Route>
         </Routes>

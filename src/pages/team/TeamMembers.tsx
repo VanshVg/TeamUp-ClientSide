@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { userInterface } from "../../components/UpdateProfile";
+import TeamNavbar from "../../components/TeamNavbar";
 
 interface teamMembersInterface {
   id: number;
@@ -17,6 +18,7 @@ interface teamMembersInterface {
 
 const TeamMembers = () => {
   const [teamMembers, setTeamMembers] = useState<teamMembersInterface[]>();
+  const [useData, setUserData] = useState<userInterface>();
   const [members, setMembers] = useState<number>(0);
 
   const params = useParams();
@@ -43,6 +45,21 @@ const TeamMembers = () => {
       });
   }, []);
 
+  useEffect(() => {
+    axios
+      .get(`http://192.168.10.72:4000/auth/profile`, { withCredentials: true })
+      .then((resp) => {
+        if (resp.data.success) {
+          setUserData(resp.data.userData);
+        }
+      })
+      .catch((error) => {
+        if (!error.response.data.success) {
+          navigate("/error");
+        }
+      });
+  }, []);
+
   return (
     <div className="h-screen">
       <Helmet>
@@ -53,6 +70,7 @@ const TeamMembers = () => {
         <div className="flex h-screen">
           <Sidebar />
           <div className="w-[93%] overflow-y-auto pb-[150px]">
+            <TeamNavbar active={"members"} />
             <div className="max-w-[80%] mx-auto mt-[35px]">
               <h2 className="text-blue text-[35px] text-left font-bold">
                 Admins
@@ -71,9 +89,15 @@ const TeamMembers = () => {
                               "last_name"
                             ][0].toUpperCase()}`}
                           </div>
-                          <p className="ml-[15px] mt-[3px] hover:underline cursor-pointer text-fontBlue text-[20px]">
-                            {`${element["user"]["username"]}`}
-                          </p>
+                          {useData?.username === element["user"]["username"] ? (
+                            <p className="ml-[15px] mt-[3px] hover:underline cursor-pointer text-fontBlue text-[20px]">
+                              You
+                            </p>
+                          ) : (
+                            <p className="ml-[15px] mt-[3px] hover:underline cursor-pointer text-fontBlue text-[20px]">
+                              {element["user"]["username"]}
+                            </p>
+                          )}
                           {index !== teamMembers.length - 1 ? (
                             <div className="h-[1px] bg-gray mt-[10px]"></div>
                           ) : (
@@ -108,9 +132,16 @@ const TeamMembers = () => {
                                     "last_name"
                                   ][0].toUpperCase()}`}
                                 </div>
-                                <p className="ml-[15px] mt-[3px] hover:underline cursor-pointer text-fontBlue text-[20px]">
-                                  {element["user"]["username"]}
-                                </p>
+                                {useData?.username ===
+                                element["user"]["username"] ? (
+                                  <p className="ml-[15px] mt-[3px] hover:underline cursor-pointer text-fontBlue text-[20px]">
+                                    You
+                                  </p>
+                                ) : (
+                                  <p className="ml-[15px] mt-[3px] hover:underline cursor-pointer text-fontBlue text-[20px]">
+                                    {element["user"]["username"]}
+                                  </p>
+                                )}
                               </div>
                               {index !== teamMembers.length - 1 ? (
                                 <div className="h-[1px] bg-gray mt-[10px]"></div>

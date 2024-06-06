@@ -1,13 +1,14 @@
 import { Helmet } from "react-helmet";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
-import { MouseEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { customErrorInterface } from "../auth/Register";
 import { Snackbar, Tooltip } from "@mui/material";
 import CopyToClipboard from "react-copy-to-clipboard";
 import Swal from "sweetalert2";
+import TeamNavbar from "../../components/TeamNavbar";
 
 interface teamMembersInterface {
   user_id: number;
@@ -98,52 +99,6 @@ const Team = () => {
       });
   }, [params, teamCode]);
 
-  const openSubMenu = (e: MouseEvent<HTMLElement>) => {
-    (document.getElementById("submenu") as HTMLElement).style.display = "block";
-  };
-
-  const closeSubMenu = (e: MouseEvent<HTMLElement>) => {
-    (document.getElementById("submenu") as HTMLElement).style.display = "none";
-  };
-
-  const handleDeleteTeam = (id: number) => {
-    Swal.fire({
-      title: "Archive Confirmation",
-      text: "Are sure you want to delete this team?",
-      icon: "warning",
-      showConfirmButton: true,
-      showCancelButton: true,
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes",
-      confirmButtonColor: "#2554c7",
-      color: "#28183b",
-      showLoaderOnConfirm: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        axios
-          .delete(`http://192.168.10.72:4000/team/remove/${id}`, {
-            withCredentials: true,
-          })
-          .then((resp) => {
-            if (resp.data.success) {
-              Swal.fire({
-                title: "Team deleted successfully",
-                icon: "success",
-                showConfirmButton: false,
-                timer: 2000,
-              }).then(() => {
-                navigate("/dashboard");
-              });
-            }
-          })
-          .catch((error) => {
-            if (error) {
-              navigate("/*");
-            }
-          });
-      }
-    });
-  };
   return (
     <div className="h-screen">
       <Helmet>
@@ -153,15 +108,9 @@ const Team = () => {
         <Navbar />
         <div className="flex h-screen">
           <Sidebar />
-          <div className="w-[93%] p-[15px] pt-[40px] pb-[100px] overflow-y-auto">
+          <div className="w-[93%] pb-[100px] overflow-y-auto">
+            <TeamNavbar active={"team"} />
             <div className="relative w-[80%] mx-auto">
-              <img
-                src="/icons/three-dots.svg"
-                className="absolute top-[2%] right-0 h-[35px] cursor-pointer"
-                alt=""
-                onMouseEnter={openSubMenu}
-                onMouseLeave={closeSubMenu}
-              ></img>
               <img
                 src={`${teamData?.banner_url}.jpg`}
                 className="mx-auto rounded-[8px] w-full"
@@ -170,45 +119,6 @@ const Team = () => {
               <h1 className="text-fontBlue font-bold text-[35px] absolute bottom-[2%] right-[2%]">
                 {teamData?.name}
               </h1>
-              <div
-                className={`absolute bg-white z-50 -right-5 top-8 shadow-[2px_2px_2px_2px_gray] rounded-[8px]`}
-                id={`submenu`}
-                style={{ display: "none" }}
-                onMouseEnter={openSubMenu}
-                onMouseLeave={closeSubMenu}
-              >
-                {teamData?.team_has_members[0].role === "admin" ? (
-                  <Link to={`/team/${teamData?.id}/edit`}>
-                    <div className="flex hover:bg-gray px-[7px] py-[2px] pt-[5px] cursor-pointer rounded-tl-[8px] rounded-tr-[8px] ease-out duration-200">
-                      <img
-                        src="/icons/edit.svg"
-                        alt=""
-                        className="h-[18px]"
-                      ></img>
-                      <p className="text-left text-[15px] ml-[8px] -mt-[2px] text-fontBlue">
-                        Edit team
-                      </p>
-                    </div>
-                  </Link>
-                ) : (
-                  ""
-                )}
-                {teamData?.team_has_members[0].role === "admin" ? (
-                  <div
-                    className="flex hover:bg-gray px-[7px] py-[2px] pt-[5px] mt-[7px] cursor-pointer rounded-bl-[8px] rounded-br-[8px]  ease-out duration-200"
-                    onClick={() =>
-                      handleDeleteTeam((teamData as userTeamsInterface).id)
-                    }
-                  >
-                    <img src="/icons/bin.svg" alt="" className="h-[18px]"></img>
-                    <p className="text-left text-[15px] ml-[8px] -mt-[2px] text-fontBlue">
-                      Delete team
-                    </p>
-                  </div>
-                ) : (
-                  ""
-                )}
-              </div>
             </div>
             <div className="flex mt-[20px] w-[80%] mx-auto">
               <div className="w-[30%]">
