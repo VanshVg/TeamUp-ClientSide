@@ -39,7 +39,7 @@ const TeamMembers = () => {
       })
       .catch((error) => {
         const { data } = error.response;
-        if (data.type === "server") {
+        if (!data.success) {
           navigate("/error");
         }
       });

@@ -105,7 +105,7 @@ const About = () => {
     handleChange(e);
   };
 
-  const handleLeaveTeam = () => {
+  const handleLeaveTeam = (): void => {
     Swal.fire({
       title: "Leave Confirmation",
       text: "Are sure you want to leave this team?",
@@ -131,6 +131,38 @@ const About = () => {
           .catch((error) => {
             if (!error.data.type.success) {
               navigate("/error");
+            }
+          });
+      }
+    });
+  };
+
+  const handleDeleteTeam = (): void => {
+    Swal.fire({
+      title: "Delete Confirmation",
+      text: "Are sure you want to delete this team?",
+      icon: "warning",
+      showConfirmButton: true,
+      showCancelButton: true,
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes",
+      confirmButtonColor: "#2554c7",
+      color: "#28183b",
+      showLoaderOnConfirm: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete(`http://192.168.10.72:4000/team/remove/${teamId}`, {
+            withCredentials: true,
+          })
+          .then((resp) => {
+            if (resp.data.success) {
+              navigate("/dashboard");
+            }
+          })
+          .catch((error) => {
+            if (error) {
+              navigate("/*");
             }
           });
       }
@@ -272,6 +304,7 @@ const About = () => {
                 <div
                   tabIndex={3}
                   className="text-red border-[1px] w-[150px] p-[10px] ml-[40px] mt-[40px] rounded-[8px] transition duration-300 hover:bg-red hover:text-white cursor-pointer"
+                  onClick={handleDeleteTeam}
                 >
                   Delete Team
                 </div>

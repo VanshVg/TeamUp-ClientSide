@@ -30,10 +30,6 @@ interface userTeamsInterface {
 
 const Team = () => {
   const [teamData, setTeamData] = useState<userTeamsInterface>();
-  const [teamError, setTeamError] = useState<customErrorInterface>({
-    type: "",
-    message: "",
-  });
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
   const [teamCode, setTeamCode] = useState<boolean>(false);
 
@@ -91,10 +87,8 @@ const Team = () => {
       })
       .catch((error) => {
         const { data } = error.response;
-        if (data.type === "server") {
-          navigate("/*");
-        } else if (!data.success) {
-          setTeamError({ type: data.type, message: data.message });
+        if (!data.success) {
+          navigate("/error");
         }
       });
   }, [params, teamCode]);
