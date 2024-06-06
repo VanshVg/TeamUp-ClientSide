@@ -2,13 +2,33 @@ import { useDispatch, useSelector } from "react-redux";
 import { toggleSidebar, toggleTeams } from "../redux/actions/sidebarActions";
 import { RootState } from "../redux/types";
 import CreateTeam from "./modals/CreateTeam";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import JoinTeam from "./modals/JoinTeam";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { userInterface } from "./UpdateProfile";
+import axios from "axios";
 
 const Navbar = () => {
   const [isCreateTeam, setIsCreateTeam] = useState<boolean>(false);
   const [isJoinTeam, setIsJoinTeam] = useState<boolean>(false);
+  const [userData, setUserData] = useState<userInterface>();
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    axios
+      .get(`http://192.168.10.72:4000/auth/profile`, { withCredentials: true })
+      .then((resp) => {
+        if (resp.data.success) {
+          setUserData(resp.data.userData);
+        }
+      })
+      .catch((error) => {
+        if (!error.response.data.success) {
+          navigate("/error");
+        }
+      });
+  }, []);
 
   const isSidebarOpen = useSelector(
     (state: RootState) => state.sidebar.isSidebarOpen
@@ -67,14 +87,14 @@ const Navbar = () => {
             </div>
             <div className="flex text-fontBlue text-[18px] duration-300 ease-out cursor-pointer hover:bg-lightBg rounded-[22px] px-[10px]">
               <img src="/icons/account.svg" alt=""></img>
-              <p className="ml-[7px] mt-[8px]">Profile</p>
+              <p className="ml-[7px] mt-[8px]">{userData?.username}</p>
             </div>
           </div>
         ) : (
           <div className="flex justify-end w-[500px] mt-[20px]">
             <div className="flex text-fontBlue text-[18px] duration-300 ease-out cursor-pointer hover:bg-lightBg rounded-[22px] px-[10px]">
               <img src="/icons/account.svg" alt=""></img>
-              <p className="ml-[7px] mt-[8px]">Profile</p>
+              <p className="ml-[7px] mt-[8px]">{userData?.username}</p>
             </div>
           </div>
         )}
