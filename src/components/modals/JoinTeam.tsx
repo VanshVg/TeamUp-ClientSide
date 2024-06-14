@@ -74,7 +74,7 @@ const JoinTeam = (props: modalInterface) => {
       <Modal
         isOpen={isOpen}
         onRequestClose={onRequestClose}
-        contentLabel="Create a Team"
+        contentLabel="Join a Team"
         className={
           "w-[50%] bg-white border-0 outline-0 mx-auto mt-[170px] shadow-[2px_2px_2px_2px_grey] rounded-[8px] pb-[30px] pt-[15px] px-[20px]"
         }

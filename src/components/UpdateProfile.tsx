@@ -1,14 +1,15 @@
 import axios from "axios";
 import { useFormik } from "formik";
 import { ChangeEvent, useEffect, useState } from "react";
+import Swal from "sweetalert2";
+import Cookies, { Cookie } from "universal-cookie";
 
 import { useNavigate } from "react-router-dom";
 import { customErrorInterface } from "../pages/auth/Register";
 import updateProfileSchema from "../schemas/updateProfile";
-import Cookies, { Cookie } from "universal-cookie";
-import Swal from "sweetalert2";
 
 export interface userInterface {
+  id: number | "";
   first_name: string;
   last_name: string;
   username: string;
@@ -17,6 +18,7 @@ export interface userInterface {
 
 const UpdateProfile = () => {
   const [userData, setUserData] = useState<userInterface>({
+    id: "",
     first_name: "",
     last_name: "",
     username: "",

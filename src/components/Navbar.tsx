@@ -7,10 +7,12 @@ import JoinTeam from "./modals/JoinTeam";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { userInterface } from "./UpdateProfile";
 import axios from "axios";
+import UserProfile from "./modals/UserProfile";
 
 const Navbar = () => {
   const [isCreateTeam, setIsCreateTeam] = useState<boolean>(false);
   const [isJoinTeam, setIsJoinTeam] = useState<boolean>(false);
+  const [isProfile, setIsProfile] = useState<boolean>(false);
   const [userData, setUserData] = useState<userInterface>();
 
   const navigate = useNavigate();
@@ -46,6 +48,10 @@ const Navbar = () => {
 
   const handleJoinTeam = () => {
     setIsJoinTeam(true);
+  };
+
+  const handleProfile = () => {
+    setIsProfile(true);
   };
 
   const handleMenu = () => {
@@ -85,14 +91,20 @@ const Navbar = () => {
               <img src="/icons/door.svg" className="mt-[2px]" alt=""></img>
               <p className="ml-[10px] mt-[8px]">JoinTeam</p>
             </div>
-            <div className="flex text-fontBlue text-[18px] duration-300 ease-out cursor-pointer hover:bg-lightBg rounded-[22px] px-[10px]">
+            <div
+              className="flex text-fontBlue text-[18px] duration-300 ease-out cursor-pointer hover:bg-lightBg rounded-[22px] px-[10px]"
+              onClick={handleProfile}
+            >
               <img src="/icons/account.svg" alt=""></img>
               <p className="ml-[7px] mt-[8px]">{userData?.username}</p>
             </div>
           </div>
         ) : (
           <div className="flex justify-end w-[500px] mt-[20px]">
-            <div className="flex text-fontBlue text-[18px] duration-300 ease-out cursor-pointer hover:bg-lightBg rounded-[22px] px-[10px]">
+            <div
+              className="flex text-fontBlue text-[18px] duration-300 ease-out cursor-pointer hover:bg-lightBg rounded-[22px] px-[10px]"
+              onClick={handleProfile}
+            >
               <img src="/icons/account.svg" alt=""></img>
               <p className="ml-[7px] mt-[8px]">{userData?.username}</p>
             </div>
@@ -106,6 +118,11 @@ const Navbar = () => {
       <JoinTeam
         isOpen={isJoinTeam}
         onRequestClose={() => setIsJoinTeam(false)}
+      />
+      <UserProfile
+        isOpen={isProfile}
+        onRequestClose={() => setIsProfile(false)}
+        userId={userData?.id as number}
       />
     </>
   );

@@ -12,6 +12,7 @@ import { RootState } from "../../redux/types";
 import { setUserTeams } from "../../redux/actions/userTeams";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import Loader from "../../components/Loader";
 
 export interface teamInterface {
   id: number;
@@ -44,6 +45,7 @@ const Dashboard = () => {
   });
   const [archive, setArchive] = useState<boolean>(false);
   const [deleteTeam, setDeleteTeam] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -135,6 +137,7 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
+    setIsLoading(true);
     axios
       .get(`http://192.168.10.72:4000/team/userTeams`, {
         withCredentials: true,
@@ -146,6 +149,11 @@ const Dashboard = () => {
       .catch((error) => {
         const { data } = error.response;
         setDashboardError({ type: data.type, message: data.message });
+      })
+      .finally(() => {
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 1000);
       });
   }, [CreateTeam, dispatch, archive, deleteTeam]);
 
@@ -178,151 +186,159 @@ const Dashboard = () => {
         <Navbar />
         <div className="flex h-screen">
           <Sidebar />
-          <div className="w-[93%] overflow-y-auto pb-[100px]">
-            {dashboardError.type ? (
-              <div>{dashboardError.message}</div>
-            ) : (
-              <div>
-                {!userTeams || userTeams.length === 0 ? (
-                  <div>
-                    <img
-                      src="/background/addTeam_bg.png"
-                      className="mx-auto -mt-[40px]"
-                      alt=""
-                    ></img>
-                    <div className="flex gap-[15px] justify-center">
-                      <div
-                        className="bg-blue p-[15px] border-[1px] border-blue text-white rounded-[8px] duration-300 ease-out hover:bg-white hover:text-blue cursor-pointer"
-                        onClick={handleCreateTeam}
-                      >
-                        Create Team
-                      </div>
-                      <div
-                        className="bg-white p-[15px] border-[1px] border-blue text-blue rounded-[8px] duration-300 ease-out hover:bg-blue hover:text-white cursor-pointer"
-                        onClick={handleJoinTeam}
-                      >
-                        Join Team
-                      </div>
-                    </div>
-                    <CreateTeam
-                      isOpen={isCreateTeam}
-                      onRequestClose={() => setIsCreateTeam(false)}
-                    />
-                    <JoinTeam
-                      isOpen={isJoinTeam}
-                      onRequestClose={() => setIsJoinTeam(false)}
-                    />
-                  </div>
-                ) : (
-                  <div className="p-[20px]">
-                    <div className="flex flex-wrap mx-auto">
-                      {userTeams &&
-                        userTeams.map((element, index) => (
-                          <div
-                            className="w-[calc(100%/3)] p-[10px]"
-                            key={index}
-                          >
-                            <div className="relative rounded-t-[8px]">
-                              <img
-                                src={`${element["team"]["banner_url"]}.jpg`}
-                                className="rounded-t-[8px] w-full"
-                                alt=""
-                              ></img>
-                              <Link to={`/team/${element["team"]["id"]}`}>
-                                <h2 className="text-fontBlue absolute text-[25px] bottom-[2%] right-2 text-left hover:underline cursor-pointer">
-                                  {element["team"]["name"].length > 13
-                                    ? element["team"]["name"].slice(0, 13) +
-                                      `...`
-                                    : element["team"]["name"]}
-                                </h2>
-                              </Link>
-                              <div>
+          {isLoading ? (
+            <div className="mx-auto my-auto mt-[17%]">
+              <Loader />
+            </div>
+          ) : (
+            <div className="w-[93%] overflow-y-auto pb-[100px]">
+              {dashboardError.type ? (
+                <div>{dashboardError.message}</div>
+              ) : (
+                <div>
+                  {userTeams?.length > 0 ? (
+                    <div className="p-[20px]">
+                      <div className="flex flex-wrap mx-auto">
+                        {userTeams &&
+                          userTeams.map((element, index) => (
+                            <div
+                              className="w-[calc(100%/3)] p-[10px]"
+                              key={index}
+                            >
+                              <div className="relative rounded-t-[8px]">
                                 <img
-                                  src="/icons/three-dots.svg"
-                                  className={`absolute right-0 top-1 cursor-pointer submenu${index}`}
+                                  src={`${element["team"]["banner_url"]}.jpg`}
+                                  className="rounded-t-[8px] w-full"
                                   alt=""
-                                  onMouseEnter={openSubMenu}
-                                  onMouseLeave={closeSubMenu}
                                 ></img>
-                                <div
-                                  className={`absolute bg-white z-50 -right-5 top-6 shadow-[2px_2px_2px_2px_gray] rounded-[8px] submenu${index}`}
-                                  id={`submenu${index}`}
-                                  style={{ display: "none" }}
-                                  onMouseEnter={openSubMenu}
-                                  onMouseLeave={closeSubMenu}
-                                >
-                                  <Link
-                                    to={`/team/${element["team"]["id"]}/about`}
+                                <Link to={`/team/${element["team"]["id"]}`}>
+                                  <h2 className="text-fontBlue absolute text-[25px] bottom-[2%] right-2 text-left hover:underline cursor-pointer">
+                                    {element["team"]["name"].length > 13
+                                      ? element["team"]["name"].slice(0, 13) +
+                                        `...`
+                                      : element["team"]["name"]}
+                                  </h2>
+                                </Link>
+                                <div>
+                                  <img
+                                    src="/icons/three-dots.svg"
+                                    className={`absolute right-0 top-1 cursor-pointer submenu${index}`}
+                                    alt=""
+                                    onMouseEnter={openSubMenu}
+                                    onMouseLeave={closeSubMenu}
+                                  ></img>
+                                  <div
+                                    className={`absolute bg-white z-50 -right-5 top-6 shadow-[2px_2px_2px_2px_gray] rounded-[8px] submenu${index}`}
+                                    id={`submenu${index}`}
+                                    style={{ display: "none" }}
+                                    onMouseEnter={openSubMenu}
+                                    onMouseLeave={closeSubMenu}
                                   >
+                                    <Link
+                                      to={`/team/${element["team"]["id"]}/about`}
+                                    >
+                                      {element.role === "admin" ? (
+                                        <div className="flex hover:bg-gray px-[7px] py-[2px] pt-[5px] cursor-pointer rounded-tl-[8px] rounded-tr-[8px] ease-out duration-200 mb-[7px]">
+                                          <img
+                                            src="/icons/edit.svg"
+                                            alt=""
+                                            className="h-[18px]"
+                                          ></img>
+                                          <p className="text-left text-[15px] ml-[8px] -mt-[2px] text-fontBlue">
+                                            Edit team
+                                          </p>
+                                        </div>
+                                      ) : (
+                                        ""
+                                      )}
+                                    </Link>
+                                    <div
+                                      className={
+                                        element.role === "admin"
+                                          ? `flex hover:bg-gray px-[7px] py-[2px] pt-[5px]  cursor-pointer ease-out duration-200`
+                                          : `flex hover:bg-gray px-[7px] py-[2px] pt-[5px]  cursor-pointer ease-out duration-200 rounded-[8px]`
+                                      }
+                                      onClick={() =>
+                                        handleArchive(element["team"]["id"])
+                                      }
+                                    >
+                                      <img
+                                        src="/icons/archived-orange.svg"
+                                        alt=""
+                                        className="h-[18px]"
+                                      ></img>
+                                      <p className="text-left text-[15px] ml-[8px] -mt-[2px] text-fontBlue">
+                                        Add to archives
+                                      </p>
+                                    </div>
                                     {element.role === "admin" ? (
-                                      <div className="flex hover:bg-gray px-[7px] py-[2px] pt-[5px] cursor-pointer rounded-tl-[8px] rounded-tr-[8px] ease-out duration-200 mb-[7px]">
+                                      <div
+                                        className="flex hover:bg-gray px-[7px] py-[2px] pt-[5px] mt-[7px] cursor-pointer rounded-bl-[8px] rounded-br-[8px]  ease-out duration-200"
+                                        onClick={() =>
+                                          handleDeleteTeam(
+                                            element["team"]["id"]
+                                          )
+                                        }
+                                      >
                                         <img
-                                          src="/icons/edit.svg"
+                                          src="/icons/bin.svg"
                                           alt=""
                                           className="h-[18px]"
                                         ></img>
                                         <p className="text-left text-[15px] ml-[8px] -mt-[2px] text-fontBlue">
-                                          Edit team
+                                          Delete team
                                         </p>
                                       </div>
                                     ) : (
                                       ""
                                     )}
-                                  </Link>
-                                  <div
-                                    className={
-                                      element.role === "admin"
-                                        ? `flex hover:bg-gray px-[7px] py-[2px] pt-[5px]  cursor-pointer ease-out duration-200`
-                                        : `flex hover:bg-gray px-[7px] py-[2px] pt-[5px]  cursor-pointer ease-out duration-200 rounded-[8px]`
-                                    }
-                                    onClick={() =>
-                                      handleArchive(element["team"]["id"])
-                                    }
-                                  >
-                                    <img
-                                      src="/icons/archived-orange.svg"
-                                      alt=""
-                                      className="h-[18px]"
-                                    ></img>
-                                    <p className="text-left text-[15px] ml-[8px] -mt-[2px] text-fontBlue">
-                                      Add to archives
-                                    </p>
                                   </div>
-                                  {element.role === "admin" ? (
-                                    <div
-                                      className="flex hover:bg-gray px-[7px] py-[2px] pt-[5px] mt-[7px] cursor-pointer rounded-bl-[8px] rounded-br-[8px]  ease-out duration-200"
-                                      onClick={() =>
-                                        handleDeleteTeam(element["team"]["id"])
-                                      }
-                                    >
-                                      <img
-                                        src="/icons/bin.svg"
-                                        alt=""
-                                        className="h-[18px]"
-                                      ></img>
-                                      <p className="text-left text-[15px] ml-[8px] -mt-[2px] text-fontBlue">
-                                        Delete team
-                                      </p>
-                                    </div>
-                                  ) : (
-                                    ""
-                                  )}
                                 </div>
                               </div>
+                              <div className="text-left border-[1px] border-[gray] rounded-b-[8px] -mt-[1px] h-[200px]">
+                                <div className="mt-[5px] ml-[4px] h-[70%] text-fontBlue"></div>
+                                <div className="h-[1px] bg-gray"></div>
+                                <div className="pt-[6px] text-fontBlue"></div>
+                              </div>
                             </div>
-                            <div className="text-left border-[1px] border-[gray] rounded-b-[8px] -mt-[1px] h-[200px]">
-                              <div className="mt-[5px] ml-[4px] h-[70%] text-fontBlue"></div>
-                              <div className="h-[1px] bg-gray"></div>
-                              <div className="pt-[6px] text-fontBlue"></div>
-                            </div>
-                          </div>
-                        ))}
+                          ))}
+                      </div>
                     </div>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
+                  ) : (
+                    <div>
+                      <img
+                        src="/background/addTeam_bg.png"
+                        className="mx-auto -mt-[40px]"
+                        alt=""
+                      ></img>
+                      <div className="flex gap-[15px] justify-center">
+                        <div
+                          className="bg-blue p-[15px] border-[1px] border-blue text-white rounded-[8px] duration-300 ease-out hover:bg-white hover:text-blue cursor-pointer"
+                          onClick={handleCreateTeam}
+                        >
+                          Create Team
+                        </div>
+                        <div
+                          className="bg-white p-[15px] border-[1px] border-blue text-blue rounded-[8px] duration-300 ease-out hover:bg-blue hover:text-white cursor-pointer"
+                          onClick={handleJoinTeam}
+                        >
+                          Join Team
+                        </div>
+                      </div>
+                      <CreateTeam
+                        isOpen={isCreateTeam}
+                        onRequestClose={() => setIsCreateTeam(false)}
+                      />
+                      <JoinTeam
+                        isOpen={isJoinTeam}
+                        onRequestClose={() => setIsJoinTeam(false)}
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>

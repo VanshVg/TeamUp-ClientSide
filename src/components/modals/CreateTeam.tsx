@@ -5,8 +5,7 @@ import axios from "axios";
 import { ChangeEvent, useState } from "react";
 import { customErrorInterface } from "../../pages/auth/Register";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../redux/types";
+import { useDispatch } from "react-redux";
 import { setUserTeams } from "../../redux/actions/userTeams";
 import { fetchUserTeams } from "../../hooks/fetchData";
 
