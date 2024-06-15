@@ -8,6 +8,7 @@ import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import updateTeam from "../../schemas/updateTeam";
 import Swal from "sweetalert2";
+import Loader from "../../components/Loader";
 
 export interface teamMembersInterface {
   role: string;
@@ -27,6 +28,7 @@ const About = () => {
     description: "",
     team_has_members: [{ role: "" }],
   });
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const params = useParams();
   const navigate: NavigateFunction = useNavigate();
@@ -34,6 +36,7 @@ const About = () => {
   const teamId = params.id;
 
   useEffect(() => {
+    setIsLoading(true);
     axios
       .get(`http://192.168.10.72:4000/team/get/${teamId}`, {
         withCredentials: true,
@@ -47,6 +50,11 @@ const About = () => {
         if (!error.response.data.success) {
           navigate("/error");
         }
+      })
+      .finally(() => {
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 1000);
       });
   }, []);
 
@@ -184,132 +192,140 @@ const About = () => {
               <h2 className="text-blue text-[30px] font-bold text-center">
                 Team Details
               </h2>
-              <div className="w-[60%] mx-auto">
-                <form>
-                  <div className="flex mx-auto max-w-[77%] gap-[6%] mt-[10px]"></div>
-                  <div className="mt-[20px] max-w-[77%] mx-auto">
-                    <div className="relative">
-                      {teamDetails?.team_has_members[0].role === "admin" ? (
-                        <input
-                          tabIndex={1}
-                          type="text"
-                          id="name"
-                          name="name"
-                          className="block  px-2.5 pb-2.5 pt-4 w-full h-[40px] text-sm text-blue bg-transparent rounded-lg border-[1px] border-blue appearance-none dark:text-blue focus:text-blue dark:border-blue dark:focus:border-blue focus:outline-none focus:ring-0 focus:border-blue peer mx-auto "
-                          placeholder=""
-                          autoComplete="off"
-                          value={values.name}
-                          onChange={handleInputChange}
-                          onBlur={handleBlur}
-                        />
-                      ) : (
-                        <input
-                          tabIndex={1}
-                          type="text"
-                          id="name"
-                          name="name"
-                          className="block  px-2.5 pb-2.5 pt-4 w-full h-[40px] text-sm text-blue bg-transparent rounded-lg border-[1px] border-blue appearance-none dark:text-blue focus:text-blue dark:border-blue dark:focus:border-blue focus:outline-none focus:ring-0 focus:border-blue peer mx-auto "
-                          placeholder=""
-                          autoComplete="off"
-                          value={values.name}
-                          onChange={handleInputChange}
-                          onBlur={handleBlur}
-                          disabled
-                        />
-                      )}
-                      <label
-                        htmlFor="name"
-                        className="absolute text-sm text-blue dark:text-blue duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-focus:text-blue peer-focus:dark:text-blue peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1 cursor-text mx-auto"
-                      >
-                        Team Name
-                      </label>
+              {isLoading ? (
+                <div className="mx-auto my-auto w-[80px] mt-[11%]">
+                  <Loader />
+                </div>
+              ) : (
+                <div>
+                  <div className="w-[60%] mx-auto">
+                    <form>
+                      <div className="flex mx-auto max-w-[77%] gap-[6%] mt-[10px]"></div>
+                      <div className="mt-[20px] max-w-[77%] mx-auto">
+                        <div className="relative">
+                          {teamDetails?.team_has_members[0].role === "admin" ? (
+                            <input
+                              tabIndex={1}
+                              type="text"
+                              id="name"
+                              name="name"
+                              className="block  px-2.5 pb-2.5 pt-4 w-full h-[40px] text-sm text-blue bg-transparent rounded-lg border-[1px] border-blue appearance-none dark:text-blue focus:text-blue dark:border-blue dark:focus:border-blue focus:outline-none focus:ring-0 focus:border-blue peer mx-auto "
+                              placeholder=""
+                              autoComplete="off"
+                              value={values.name}
+                              onChange={handleInputChange}
+                              onBlur={handleBlur}
+                            />
+                          ) : (
+                            <input
+                              tabIndex={1}
+                              type="text"
+                              id="name"
+                              name="name"
+                              className="block  px-2.5 pb-2.5 pt-4 w-full h-[40px] text-sm text-blue bg-transparent rounded-lg border-[1px] border-blue appearance-none dark:text-blue focus:text-blue dark:border-blue dark:focus:border-blue focus:outline-none focus:ring-0 focus:border-blue peer mx-auto "
+                              placeholder=""
+                              autoComplete="off"
+                              value={values.name}
+                              onChange={handleInputChange}
+                              onBlur={handleBlur}
+                              disabled
+                            />
+                          )}
+                          <label
+                            htmlFor="name"
+                            className="absolute text-sm text-blue dark:text-blue duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-focus:text-blue peer-focus:dark:text-blue peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1 cursor-text mx-auto"
+                          >
+                            Team Name
+                          </label>
+                        </div>
+                        {errors.name && touched.name ? (
+                          <p className="-mb-[12px] mt-[2px] text-left text-[15px] text-red">
+                            {errors.name}
+                          </p>
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                      <div className="mt-[20px] max-w-[77%] mx-auto">
+                        <div className="relative">
+                          {teamDetails.team_has_members[0].role === "admin" ? (
+                            <input
+                              tabIndex={2}
+                              type="text"
+                              id="description"
+                              name="description"
+                              className="block  px-2.5 pb-2.5 w-full h-[80px] text-sm text-blue bg-transparent rounded-lg border-[1px] border-blue appearance-none dark:text-blue focus:text-blue dark:border-blue dark:focus:border-blue focus:outline-none focus:ring-0 focus:border-blue peer mx-auto "
+                              placeholder=""
+                              autoComplete="off"
+                              value={values.description as string}
+                              onChange={handleInputChange}
+                              onBlur={handleBlur}
+                            />
+                          ) : (
+                            <input
+                              tabIndex={2}
+                              type="text"
+                              id="description"
+                              name="description"
+                              className="block  px-2.5 pb-2.5 w-full h-[80px] text-sm text-blue bg-transparent rounded-lg border-[1px] border-blue appearance-none dark:text-blue focus:text-blue dark:border-blue dark:focus:border-blue focus:outline-none focus:ring-0 focus:border-blue peer mx-auto "
+                              placeholder=""
+                              autoComplete="off"
+                              value={values.description as string}
+                              onChange={handleInputChange}
+                              onBlur={handleBlur}
+                              disabled
+                            />
+                          )}
+                          <label
+                            htmlFor="description"
+                            className="absolute text-sm text-blue dark:text-blue duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-focus:text-blue peer-focus:dark:text-blue peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1 cursor-text mx-auto"
+                          >
+                            Team Description
+                          </label>
+                        </div>
+                        {errors.description && touched.description ? (
+                          <p className="-mb-[12px] mt-[2px] text-left text-[15px] text-red">
+                            {errors.description}
+                          </p>
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                    </form>
+                  </div>
+                  {teamDetails.team_has_members[0].role === "admin" ? (
+                    <div
+                      tabIndex={3}
+                      className="text-blue border-[1px] w-[150px] p-[10px] mx-auto mt-[40px] rounded-[8px] transition duration-300 hover:bg-blue hover:text-white cursor-pointer"
+                      onClick={handleUpdateTeam}
+                    >
+                      Update Team
                     </div>
-                    {errors.name && touched.name ? (
-                      <p className="-mb-[12px] mt-[2px] text-left text-[15px] text-red">
-                        {errors.name}
-                      </p>
+                  ) : (
+                    ""
+                  )}
+                  <div className="h-[1px] bg-orange mt-[40px] w-[70%] mx-auto"></div>
+                  <div className="flex w-[60%] mx-auto justify-center">
+                    <div
+                      tabIndex={3}
+                      className="text-red border-[1px] w-[150px] p-[10px] mt-[40px] rounded-[8px] transition duration-300 hover:bg-red hover:text-white cursor-pointer"
+                      onClick={handleLeaveTeam}
+                    >
+                      Leave Team
+                    </div>
+                    {teamDetails.team_has_members[0].role === "admin" ? (
+                      <div
+                        tabIndex={3}
+                        className="text-red border-[1px] w-[150px] p-[10px] ml-[40px] mt-[40px] rounded-[8px] transition duration-300 hover:bg-red hover:text-white cursor-pointer"
+                        onClick={handleDeleteTeam}
+                      >
+                        Delete Team
+                      </div>
                     ) : (
                       ""
                     )}
                   </div>
-                  <div className="mt-[20px] max-w-[77%] mx-auto">
-                    <div className="relative">
-                      {teamDetails.team_has_members[0].role === "admin" ? (
-                        <input
-                          tabIndex={2}
-                          type="text"
-                          id="description"
-                          name="description"
-                          className="block  px-2.5 pb-2.5 w-full h-[80px] text-sm text-blue bg-transparent rounded-lg border-[1px] border-blue appearance-none dark:text-blue focus:text-blue dark:border-blue dark:focus:border-blue focus:outline-none focus:ring-0 focus:border-blue peer mx-auto "
-                          placeholder=""
-                          autoComplete="off"
-                          value={values.description as string}
-                          onChange={handleInputChange}
-                          onBlur={handleBlur}
-                        />
-                      ) : (
-                        <input
-                          tabIndex={2}
-                          type="text"
-                          id="description"
-                          name="description"
-                          className="block  px-2.5 pb-2.5 w-full h-[80px] text-sm text-blue bg-transparent rounded-lg border-[1px] border-blue appearance-none dark:text-blue focus:text-blue dark:border-blue dark:focus:border-blue focus:outline-none focus:ring-0 focus:border-blue peer mx-auto "
-                          placeholder=""
-                          autoComplete="off"
-                          value={values.description as string}
-                          onChange={handleInputChange}
-                          onBlur={handleBlur}
-                          disabled
-                        />
-                      )}
-                      <label
-                        htmlFor="description"
-                        className="absolute text-sm text-blue dark:text-blue duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-focus:text-blue peer-focus:dark:text-blue peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1 cursor-text mx-auto"
-                      >
-                        Team Description
-                      </label>
-                    </div>
-                    {errors.description && touched.description ? (
-                      <p className="-mb-[12px] mt-[2px] text-left text-[15px] text-red">
-                        {errors.description}
-                      </p>
-                    ) : (
-                      ""
-                    )}
-                  </div>
-                </form>
-              </div>
-              {teamDetails.team_has_members[0].role === "admin" ? (
-                <div
-                  tabIndex={3}
-                  className="text-blue border-[1px] w-[150px] p-[10px] mx-auto mt-[40px] rounded-[8px] transition duration-300 hover:bg-blue hover:text-white cursor-pointer"
-                  onClick={handleUpdateTeam}
-                >
-                  Update Team
                 </div>
-              ) : (
-                ""
-              )}
-            </div>
-            <div className="h-[1px] bg-orange mt-[40px] w-[70%] mx-auto"></div>
-            <div className="flex w-[60%] mx-auto justify-center">
-              <div
-                tabIndex={3}
-                className="text-red border-[1px] w-[150px] p-[10px] mt-[40px] rounded-[8px] transition duration-300 hover:bg-red hover:text-white cursor-pointer"
-                onClick={handleLeaveTeam}
-              >
-                Leave Team
-              </div>
-              {teamDetails.team_has_members[0].role === "admin" ? (
-                <div
-                  tabIndex={3}
-                  className="text-red border-[1px] w-[150px] p-[10px] ml-[40px] mt-[40px] rounded-[8px] transition duration-300 hover:bg-red hover:text-white cursor-pointer"
-                  onClick={handleDeleteTeam}
-                >
-                  Delete Team
-                </div>
-              ) : (
-                ""
               )}
             </div>
           </div>

@@ -14,6 +14,7 @@ export interface userInterface {
   last_name: string;
   username: string;
   email: string;
+  role?: string;
 }
 
 const UpdateProfile = () => {

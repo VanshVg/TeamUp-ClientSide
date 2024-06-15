@@ -10,11 +10,13 @@ interface modalInterface {
   isOpen: boolean;
   onRequestClose: () => void;
   userId: number;
+  role: string;
+  isAdmin: boolean;
 }
 
 const UserProfile = (props: modalInterface) => {
-  const { isOpen, onRequestClose, userId } = props;
-
+  const { isOpen, onRequestClose, userId, role, isAdmin } = props;
+  console.log(role, isAdmin);
   const [userData, setUserData] = useState<userInterface>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -160,6 +162,30 @@ const UserProfile = (props: modalInterface) => {
                 </div>
               </div>
             </div>
+          )}
+        </div>
+        <div className="flex justify-center gap-[10px]">
+          {!isAdmin && role === "admin" ? (
+            <div
+              tabIndex={3}
+              className="text-red border-[1px] text-[18px] w-[150px] p-[10px] mt-[40px] rounded-[8px] transition duration-300 hover:bg-red text-center hover:text-white cursor-pointer"
+              // onClick={handleLeaveTeam}
+            >
+              Remove
+            </div>
+          ) : (
+            ""
+          )}
+          {!isAdmin && role === "admin" ? (
+            <div
+              tabIndex={3}
+              className="text-blue border-[1px] text-[18px] w-[150px] p-[10px] mt-[40px] rounded-[8px] transition duration-300 hover:bg-blue text-center hover:text-white cursor-pointer"
+              // onClick={handleLeaveTeam}
+            >
+              Make Admin
+            </div>
+          ) : (
+            ""
           )}
         </div>
       </Modal>

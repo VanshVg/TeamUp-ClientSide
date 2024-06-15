@@ -121,6 +121,8 @@ const Navbar = () => {
       />
       <UserProfile
         isOpen={isProfile}
+        isAdmin={true}
+        role={"admin"}
         onRequestClose={() => setIsProfile(false)}
         userId={userData?.id as number}
       />
