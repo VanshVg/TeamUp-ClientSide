@@ -5,18 +5,19 @@ import axios from "axios";
 
 import { userInterface } from "../UpdateProfile";
 import Loader from "../Loader";
+import Swal from "sweetalert2";
 
 interface modalInterface {
   isOpen: boolean;
   onRequestClose: () => void;
+  teamId: number;
   userId: number;
   role: string;
   isAdmin: boolean;
 }
 
 const UserProfile = (props: modalInterface) => {
-  const { isOpen, onRequestClose, userId, role, isAdmin } = props;
-  console.log(role, isAdmin);
+  const { isOpen, onRequestClose, userId, role, isAdmin, teamId } = props;
   const [userData, setUserData] = useState<userInterface>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -43,6 +44,125 @@ const UserProfile = (props: modalInterface) => {
         setIsLoading(false);
       });
   }, [userId]);
+
+  const handleMakeAdmin = (): void => {
+    Swal.fire({
+      title: "Make Admin Confirmation",
+      text: "Are sure you want to make this user an admin?",
+      icon: "success",
+      showConfirmButton: true,
+      showCancelButton: true,
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes",
+      confirmButtonColor: "#2554c7",
+      color: "#28183b",
+      showLoaderOnConfirm: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .put(
+            `http://192.168.10.72:4000/team/makeAdmin/${teamId}/${userId}`,
+            {},
+            { withCredentials: true }
+          )
+          .then((resp) => {
+            if (resp.data.success) {
+              Swal.fire({
+                title: "Made admin successful",
+                text: "User has been made admin successfully",
+                icon: "success",
+                showConfirmButton: false,
+                timer: 2000,
+              }).then(() => {
+                onRequestClose();
+              });
+            }
+          })
+          .catch(() => {
+            navigate("/error");
+          });
+      }
+    });
+  };
+
+  const handleRemove = (): void => {
+    Swal.fire({
+      title: "Remove Confirmation",
+      text: "Are sure you want to remove this user from team?",
+      icon: "warning",
+      showConfirmButton: true,
+      showCancelButton: true,
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes",
+      confirmButtonColor: "#2554c7",
+      color: "#28183b",
+      showLoaderOnConfirm: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete(
+            `http://192.168.10.72:4000/team/removeMember/${teamId}/${userId}`,
+            { withCredentials: true }
+          )
+          .then((resp) => {
+            if (resp.data.success) {
+              Swal.fire({
+                title: "Remove user successful",
+                text: "User has been removed from team",
+                icon: "warning",
+                showConfirmButton: false,
+                timer: 2000,
+              }).then(() => {
+                onRequestClose();
+              });
+            }
+          })
+          .catch(() => {
+            navigate("/error");
+          });
+      }
+    });
+  };
+
+  const handleRemoveAdmin = (): void => {
+    Swal.fire({
+      title: "Remove Admin Confirmation",
+      text: "Are sure you want to remove this user from admin?",
+      icon: "warning",
+      showConfirmButton: true,
+      showCancelButton: true,
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes",
+      confirmButtonColor: "#2554c7",
+      color: "#28183b",
+      showLoaderOnConfirm: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .put(
+            `http://192.168.10.72:4000/team/removeAdmin/${teamId}/${userId}`,
+            {},
+            { withCredentials: true }
+          )
+          .then((resp) => {
+            if (resp.data.success) {
+              Swal.fire({
+                title: "Remove admin successful",
+                text: "User has been removed from admin",
+                icon: "warning",
+                showConfirmButton: false,
+                timer: 2000,
+              }).then(() => {
+                onRequestClose();
+              });
+            }
+          })
+          .catch(() => {
+            navigate("/error");
+          });
+      }
+    });
+  };
 
   return (
     <div className="w-[200px]">
@@ -168,10 +288,10 @@ const UserProfile = (props: modalInterface) => {
           {!isAdmin && role === "admin" ? (
             <div
               tabIndex={3}
-              className="text-red border-[1px] text-[18px] w-[150px] p-[10px] mt-[40px] rounded-[8px] transition duration-300 hover:bg-red text-center hover:text-white cursor-pointer"
-              // onClick={handleLeaveTeam}
+              className="text-blue border-[1px] text-[18px] w-[150px] p-[10px] mt-[40px] rounded-[8px] transition duration-300 hover:bg-blue text-center hover:text-white cursor-pointer"
+              onClick={handleMakeAdmin}
             >
-              Remove
+              Make Admin
             </div>
           ) : (
             ""
@@ -179,10 +299,21 @@ const UserProfile = (props: modalInterface) => {
           {!isAdmin && role === "admin" ? (
             <div
               tabIndex={3}
-              className="text-blue border-[1px] text-[18px] w-[150px] p-[10px] mt-[40px] rounded-[8px] transition duration-300 hover:bg-blue text-center hover:text-white cursor-pointer"
-              // onClick={handleLeaveTeam}
+              className="text-red border-[1px] text-[18px] w-[150px] p-[10px] mt-[40px] rounded-[8px] transition duration-300 hover:bg-red text-center hover:text-white cursor-pointer"
+              onClick={handleRemove}
             >
-              Make Admin
+              Remove
+            </div>
+          ) : (
+            ""
+          )}
+          {isAdmin && role === "admin" ? (
+            <div
+              tabIndex={3}
+              className="text-red border-[1px] text-[18px] w-[150px] p-[10px] mt-[40px] rounded-[8px] transition duration-300 hover:bg-red text-center hover:text-white cursor-pointer"
+              onClick={handleRemoveAdmin}
+            >
+              Remove Admin
             </div>
           ) : (
             ""

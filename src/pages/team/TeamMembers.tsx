@@ -55,7 +55,7 @@ const TeamMembers = () => {
           setIsLoading(false);
         }, 1000);
       });
-  }, []);
+  }, [isProfile]);
 
   const handleProfile = (id: number, user: boolean) => {
     setIsAdmin(user);
@@ -134,11 +134,6 @@ const TeamMembers = () => {
                                     {element["user"]["username"]}
                                   </p>
                                 )}
-                                {index !== teamMembers.length - 1 ? (
-                                  <div className="h-[1px] bg-gray mt-[10px]"></div>
-                                ) : (
-                                  ""
-                                )}
                               </div>
                             ) : (
                               ""
@@ -188,11 +183,6 @@ const TeamMembers = () => {
                                       </p>
                                     )}
                                   </div>
-                                  {index !== teamMembers.length - 1 ? (
-                                    <div className="h-[1px] bg-gray mt-[10px]"></div>
-                                  ) : (
-                                    ""
-                                  )}
                                 </>
                               ) : (
                                 ""
@@ -212,6 +202,7 @@ const TeamMembers = () => {
                   isAdmin={isAdmin}
                   role={role}
                   onRequestClose={() => setIsProfile(false)}
+                  teamId={teamMembers?.[0].team_id as number}
                   userId={userId}
                 />
               </div>

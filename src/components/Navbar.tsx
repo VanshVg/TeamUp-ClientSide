@@ -122,8 +122,9 @@ const Navbar = () => {
       <UserProfile
         isOpen={isProfile}
         isAdmin={true}
-        role={"admin"}
+        role={"none"}
         onRequestClose={() => setIsProfile(false)}
+        teamId={0}
         userId={userData?.id as number}
       />
     </>

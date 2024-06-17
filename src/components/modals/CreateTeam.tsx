@@ -48,7 +48,7 @@ const CreateTeam = (props: modalInterface) => {
                   navigate("/*");
                 }
               }
-              onRequestClose();
+              navigate(`/team/${resp.data.teamId}`);
             }
           })
           .catch((error) => {

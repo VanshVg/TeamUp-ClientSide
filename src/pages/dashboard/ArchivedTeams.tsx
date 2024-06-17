@@ -105,8 +105,10 @@ const ArchivedTeams = () => {
         <div className="flex h-screen">
           <Sidebar />
           {isLoading ? (
-            <div className="mx-auto my-auto mt-[17%]">
-              <Loader />
+            <div className="w-[93%] text-center mx-auto my-auto mt-[17%]">
+              <div className="w-[80px] mx-auto">
+                <Loader />
+              </div>
             </div>
           ) : (
             <div className="w-[93%] overflow-y-auto pb-[100px]">
