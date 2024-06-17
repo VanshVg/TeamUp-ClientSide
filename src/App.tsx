@@ -17,8 +17,10 @@ import Settings from "./pages/dashboard/Settings";
 import TeamMembers from "./pages/team/TeamMembers";
 import About from "./pages/team/About";
 import Assignments from "./pages/team/Assignments";
+import { socket } from "./socket";
 
-function App() {
+socket.emit("connection");
+const App = () => {
   return (
     <div className="App">
       <Router>
@@ -65,6 +67,6 @@ function App() {
       </Router>
     </div>
   );
-}
+};
 
 export default App;

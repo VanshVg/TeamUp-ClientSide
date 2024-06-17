@@ -1,11 +1,14 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { setUser } from "../../redux/actions/userActions";
 
 const Activation = () => {
   const params = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [activationError, setActivationError] = useState({
     type: "",
@@ -27,6 +30,7 @@ const Activation = () => {
       )
       .then((resp) => {
         if (resp.data.success) {
+          dispatch(setUser(resp.data.userData));
         }
       })
       .catch((error) => {

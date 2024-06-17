@@ -6,6 +6,8 @@ import login from "../../schemas/login";
 import axios from "axios";
 import { customErrorInterface } from "./Register";
 import Cookies, { Cookie } from "universal-cookie";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../redux/actions/userActions";
 
 const Login = () => {
   const data = {
@@ -22,6 +24,7 @@ const Login = () => {
   const cookies: Cookie = new Cookies();
 
   const navigate: NavigateFunction = useNavigate();
+  const dispatch = useDispatch();
 
   const togglePassword = (): void => {
     setPassword(!password);
@@ -41,6 +44,7 @@ const Login = () => {
                 path: "/",
                 expires: new Date(Date.now() + 2592000000),
               });
+              dispatch(setUser(data.userData));
               navigate("/dashboard");
             }
           })

@@ -3,13 +3,17 @@ import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { customErrorInterface } from "../auth/Register";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { Snackbar, Tooltip } from "@mui/material";
 import CopyToClipboard from "react-copy-to-clipboard";
 import Swal from "sweetalert2";
+
 import TeamNavbar from "../../components/TeamNavbar";
 import Loader from "../../components/Loader";
+import { socket } from "../../socket";
+import { userInterface } from "../../components/UpdateProfile";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/types";
 
 interface teamMembersInterface {
   user_id: number;
@@ -28,6 +32,14 @@ interface userTeamsInterface {
   created_at: string;
   team_has_members: teamMembersInterface[];
 }
+
+socket.once("join", (username: string) => {
+  const newUser = document.createElement("p");
+  newUser.textContent = `${username} joined the team`;
+  console.log(document.getElementById("content"));
+  document.getElementById("content")?.appendChild(newUser);
+  return socket.off("join");
+});
 
 const Team = () => {
   const [teamData, setTeamData] = useState<userTeamsInterface>();
@@ -186,7 +198,10 @@ const Team = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="w-full text-fontBlue border-[1px] border-gray ml-[30px] rounded-[5px]">
+                  <div
+                    className="w-full text-fontBlue border-[1px] border-gray ml-[30px] rounded-[5px]"
+                    id="content"
+                  >
                     <p>Content goes here..</p>
                   </div>
                 </div>
