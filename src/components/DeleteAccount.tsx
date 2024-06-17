@@ -102,7 +102,7 @@ const DeleteAccount = () => {
             />
             <label
               htmlFor="currentPassword"
-              className="absolute text-sm text-blue dark:text-blue duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-focus:text-blue peer-focus:dark:text-blue peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1 cursor-text mx-auto"
+              className="absolute text-sm text-blue dark:text-blue duration-300 transform -translate-y-4 scale-75 top-2  origin-[0] bg-white px-2 peer-focus:px-2 peer-focus:text-blue peer-focus:dark:text-blue peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1 cursor-text mx-auto"
             >
               Current Password
             </label>
@@ -110,14 +110,14 @@ const DeleteAccount = () => {
           {accountPassword ? (
             <img
               src="/icons/eye-show.svg"
-              className="-ml-[30px] z-10 cursor-pointer"
+              className="-ml-[30px]  cursor-pointer"
               onClick={toggleAccountPassword}
               alt=""
             ></img>
           ) : (
             <img
               src="/icons/eye-hidden.svg"
-              className="-ml-[30px] z-10 cursor-pointer"
+              className="-ml-[30px]  cursor-pointer"
               onClick={toggleAccountPassword}
               alt=""
             ></img>

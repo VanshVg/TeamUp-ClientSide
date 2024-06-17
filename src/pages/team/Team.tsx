@@ -99,7 +99,7 @@ const Team = () => {
           setIsLoading(false);
         }, 1000);
       });
-  }, [params, teamCode]);
+  }, []);
 
   return (
     <div className="h-screen">

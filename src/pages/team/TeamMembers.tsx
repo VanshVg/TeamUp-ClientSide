@@ -57,6 +57,20 @@ const TeamMembers = () => {
       });
   }, [isProfile]);
 
+  useEffect(() => {
+    setIsLoading(true);
+    axios
+      .get(`http://192.168.10.72:4000/team/get/${params.id}`, {
+        withCredentials: true,
+      })
+      .catch((error) => {
+        const { data } = error.response;
+        if (!data.success) {
+          navigate("/error");
+        }
+      });
+  }, []);
+
   const handleProfile = (id: number, user: boolean) => {
     setIsAdmin(user);
     setUserId(id);
