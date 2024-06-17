@@ -29,7 +29,7 @@ const Sidebar = () => {
 
   useEffect(() => {
     axios
-      .get(`http://192.168.10.72:4000/team/userTeams`, {
+      .get(`${process.env.REACT_APP_BACKEND_URL}/team/userTeams`, {
         withCredentials: true,
       })
       .then((resp) => {

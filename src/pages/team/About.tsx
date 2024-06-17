@@ -38,7 +38,7 @@ const About = () => {
   useEffect(() => {
     setIsLoading(true);
     axios
-      .get(`http://192.168.10.72:4000/team/get/${teamId}`, {
+      .get(`${process.env.REACT_APP_BACKEND_URL}/team/get/${teamId}`, {
         withCredentials: true,
       })
       .then((resp) => {
@@ -66,7 +66,7 @@ const About = () => {
       onSubmit: (values) => {
         axios
           .put(
-            `http://192.168.10.72:4000/team/update/${teamDetails.id}`,
+            `${process.env.REACT_APP_BACKEND_URL}/team/update/${teamDetails.id}`,
             values,
             {
               withCredentials: true,
@@ -128,7 +128,7 @@ const About = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`http://192.168.10.72:4000/team/leave/${teamId}`, {
+          .delete(`${process.env.REACT_APP_BACKEND_URL}/team/leave/${teamId}`, {
             withCredentials: true,
           })
           .then((resp) => {
@@ -160,9 +160,12 @@ const About = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`http://192.168.10.72:4000/team/remove/${teamId}`, {
-            withCredentials: true,
-          })
+          .delete(
+            `${process.env.REACT_APP_BACKEND_URL}/team/remove/${teamId}`,
+            {
+              withCredentials: true,
+            }
+          )
           .then((resp) => {
             if (resp.data.success) {
               navigate("/dashboard");

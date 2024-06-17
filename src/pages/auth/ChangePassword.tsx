@@ -39,9 +39,12 @@ const ChangePassword = () => {
 
   useEffect(() => {
     axios
-      .post(`http://192.168.10.72:4000/auth/verifyToken/${params.token}`, {
-        username: username,
-      })
+      .post(
+        `${process.env.REACT_APP_BACKEND_URL}/auth/verifyToken/${params.token}`,
+        {
+          username: username,
+        }
+      )
       .catch((error) => {
         const { data } = error.response;
         if (data.type === "server") {
@@ -62,7 +65,7 @@ const ChangePassword = () => {
           username: username,
         };
         axios
-          .put(`http://192.168.10.72:4000/auth/password`, userData)
+          .put(`${process.env.REACT_APP_BACKEND_URL}/auth/password`, userData)
           .then((resp) => {
             if (resp.data.success) {
               Swal.fire({

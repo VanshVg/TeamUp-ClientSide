@@ -47,7 +47,7 @@ const Register = () => {
       validationSchema: register,
       onSubmit: (values) => {
         axios
-          .post(`http://192.168.10.72:4000/auth/register`, values)
+          .post(`${process.env.REACT_APP_BACKEND_URL}/auth/register`, values)
           .then((response) => {
             const { data } = response;
             if (data.success) {

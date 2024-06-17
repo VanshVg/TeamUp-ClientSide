@@ -33,7 +33,7 @@ const Login = () => {
       validationSchema: login,
       onSubmit: (values) => {
         axios
-          .post(`http://192.168.10.72:4000/auth/login`, values)
+          .post(`${process.env.REACT_APP_BACKEND_URL}/auth/login`, values)
           .then((response) => {
             const { data } = response;
             if (data.success) {

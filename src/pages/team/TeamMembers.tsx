@@ -35,7 +35,7 @@ const TeamMembers = () => {
 
   useEffect(() => {
     axios
-      .get(`http://192.168.10.72:4000/team/members/${teamId}`, {
+      .get(`${process.env.REACT_APP_BACKEND_URL}/team/members/${teamId}`, {
         withCredentials: true,
       })
       .then((resp) => {
@@ -60,7 +60,7 @@ const TeamMembers = () => {
   useEffect(() => {
     setIsLoading(true);
     axios
-      .get(`http://192.168.10.72:4000/team/get/${params.id}`, {
+      .get(`${process.env.REACT_APP_BACKEND_URL}/team/get/${params.id}`, {
         withCredentials: true,
       })
       .catch((error) => {
@@ -79,7 +79,9 @@ const TeamMembers = () => {
 
   useEffect(() => {
     axios
-      .get(`http://192.168.10.72:4000/auth/profile`, { withCredentials: true })
+      .get(`${process.env.REACT_APP_BACKEND_URL}/auth/profile`, {
+        withCredentials: true,
+      })
       .then((resp) => {
         if (resp.data.success) {
           setUserData(resp.data.userData);

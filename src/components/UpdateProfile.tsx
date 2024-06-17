@@ -33,7 +33,9 @@ const UpdateProfile = () => {
 
   useEffect(() => {
     axios
-      .get(`http://192.168.10.72:4000/auth/profile`, { withCredentials: true })
+      .get(`${process.env.REACT_APP_BACKEND_URL}/auth/profile`, {
+        withCredentials: true,
+      })
       .then((resp) => {
         if (resp.data.success) {
           setUserData(resp.data.userData);
@@ -54,9 +56,13 @@ const UpdateProfile = () => {
       validationSchema: updateProfileSchema,
       onSubmit: (values) => {
         axios
-          .put(`http://192.168.10.72:4000/auth/updateProfile`, values, {
-            withCredentials: true,
-          })
+          .put(
+            `${process.env.REACT_APP_BACKEND_URL}/auth/updateProfile`,
+            values,
+            {
+              withCredentials: true,
+            }
+          )
           .then((resp) => {
             if (resp.data.success) {
               cookies.set("token", resp.data.token, { path: "/" });

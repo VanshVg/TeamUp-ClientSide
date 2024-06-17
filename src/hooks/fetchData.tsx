@@ -1,7 +1,10 @@
 import axios from "axios";
 
 export const fetchUserTeams = async () => {
-  return await axios.get(`http://192.168.10.72:4000/team/userTeams`, {
-    withCredentials: true,
-  });
+  return await axios.get(
+    `${process.env.REACT_APP_BACKEND_URL}/team/userTeams`,
+    {
+      withCredentials: true,
+    }
+  );
 };

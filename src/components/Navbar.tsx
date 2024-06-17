@@ -19,7 +19,9 @@ const Navbar = () => {
 
   useEffect(() => {
     axios
-      .get(`http://192.168.10.72:4000/auth/profile`, { withCredentials: true })
+      .get(`${process.env.REACT_APP_BACKEND_URL}/auth/profile`, {
+        withCredentials: true,
+      })
       .then((resp) => {
         if (resp.data.success) {
           setUserData(resp.data.userData);

@@ -28,9 +28,13 @@ const DeleteAccount = () => {
       validationSchema: deleteAccount,
       onSubmit: (values) => {
         axios
-          .post(`http://192.168.10.72:4000/auth/deleteAccount`, values, {
-            withCredentials: true,
-          })
+          .post(
+            `${process.env.REACT_APP_BACKEND_URL}/auth/deleteAccount`,
+            values,
+            {
+              withCredentials: true,
+            }
+          )
           .then((resp) => {
             if (resp.data.success) {
               cookies.remove("token", { path: "/" });
@@ -110,14 +114,14 @@ const DeleteAccount = () => {
           {accountPassword ? (
             <img
               src="/icons/eye-show.svg"
-              className="-ml-[30px]  cursor-pointer"
+              className="-ml-[30px] z-10 cursor-pointer"
               onClick={toggleAccountPassword}
               alt=""
             ></img>
           ) : (
             <img
               src="/icons/eye-hidden.svg"
-              className="-ml-[30px]  cursor-pointer"
+              className="-ml-[30px] z-10 cursor-pointer"
               onClick={toggleAccountPassword}
               alt=""
             ></img>

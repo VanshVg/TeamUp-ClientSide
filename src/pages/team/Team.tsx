@@ -54,7 +54,7 @@ const Team = () => {
       if (result.isConfirmed) {
         axios
           .put(
-            `http://192.168.10.72:4000/team/resetCode/${
+            `${process.env.REACT_APP_BACKEND_URL}/team/resetCode/${
               (teamData as userTeamsInterface).id
             }`,
             {},
@@ -80,7 +80,7 @@ const Team = () => {
   useEffect(() => {
     setIsLoading(true);
     axios
-      .get(`http://192.168.10.72:4000/team/get/${params.id}`, {
+      .get(`${process.env.REACT_APP_BACKEND_URL}/team/get/${params.id}`, {
         withCredentials: true,
       })
       .then((resp) => {
@@ -99,7 +99,7 @@ const Team = () => {
           setIsLoading(false);
         }, 1000);
       });
-  }, []);
+  }, [params.id, teamCode]);
 
   return (
     <div className="h-screen">

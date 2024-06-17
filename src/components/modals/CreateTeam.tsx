@@ -35,7 +35,7 @@ const CreateTeam = (props: modalInterface) => {
       validationSchema: createTeam,
       onSubmit: (values) => {
         axios
-          .post(`http://192.168.10.72:4000/team/create`, values, {
+          .post(`${process.env.REACT_APP_BACKEND_URL}/team/create`, values, {
             withCredentials: true,
           })
           .then(async (resp) => {

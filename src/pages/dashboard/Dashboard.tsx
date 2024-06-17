@@ -1,5 +1,5 @@
 import { Helmet } from "react-helmet";
-import { MouseEvent, MouseEventHandler, useEffect, useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import axios from "axios";
 
 import Navbar from "../../components/Navbar";
@@ -70,7 +70,7 @@ const Dashboard = () => {
       if (result.isConfirmed) {
         axios
           .put(
-            `http://192.168.10.72:4000/team/archive/${id}`,
+            `${process.env.REACT_APP_BACKEND_URL}/team/archive/${id}`,
             {},
             { withCredentials: true }
           )
@@ -111,7 +111,7 @@ const Dashboard = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`http://192.168.10.72:4000/team/remove/${id}`, {
+          .delete(`${process.env.REACT_APP_BACKEND_URL}/team/remove/${id}`, {
             withCredentials: true,
           })
           .then((resp) => {
@@ -139,7 +139,7 @@ const Dashboard = () => {
   useEffect(() => {
     setIsLoading(true);
     axios
-      .get(`http://192.168.10.72:4000/team/userTeams`, {
+      .get(`${process.env.REACT_APP_BACKEND_URL}/team/userTeams`, {
         withCredentials: true,
       })
       .then((resp) => {

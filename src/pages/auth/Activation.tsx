@@ -15,7 +15,7 @@ const Activation = () => {
   useEffect(() => {
     axios
       .put(
-        `http://192.168.10.72:4000/auth/activate/${params.token}`,
+        `${process.env.REACT_APP_BACKEND_URL}/auth/activate/${params.token}`,
         {},
         {
           withCredentials: true,

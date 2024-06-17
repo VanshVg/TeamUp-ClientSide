@@ -36,7 +36,7 @@ const ArchivedTeams = () => {
       if (result.isConfirmed) {
         axios
           .put(
-            `http://192.168.10.72:4000/team/archive/${id}`,
+            `${process.env.REACT_APP_BACKEND_URL}/team/archive/${id}`,
             {},
             { withCredentials: true }
           )
@@ -65,7 +65,7 @@ const ArchivedTeams = () => {
   useEffect(() => {
     setIsLoading(true);
     axios
-      .get(`http://192.168.10.72:4000/team/archivedTeams`, {
+      .get(`${process.env.REACT_APP_BACKEND_URL}/team/archivedTeams`, {
         withCredentials: true,
       })
       .then((resp) => {

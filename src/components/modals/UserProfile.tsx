@@ -26,7 +26,7 @@ const UserProfile = (props: modalInterface) => {
   useEffect(() => {
     setIsLoading(true);
     axios
-      .get(`http://192.168.10.72:4000/auth/userProfile/${userId}`, {
+      .get(`${process.env.REACT_APP_BACKEND_URL}/auth/userProfile/${userId}`, {
         withCredentials: true,
       })
       .then((resp) => {
@@ -61,7 +61,7 @@ const UserProfile = (props: modalInterface) => {
       if (result.isConfirmed) {
         axios
           .put(
-            `http://192.168.10.72:4000/team/makeAdmin/${teamId}/${userId}`,
+            `${process.env.REACT_APP_BACKEND_URL}/team/makeAdmin/${teamId}/${userId}`,
             {},
             { withCredentials: true }
           )
@@ -101,7 +101,7 @@ const UserProfile = (props: modalInterface) => {
       if (result.isConfirmed) {
         axios
           .delete(
-            `http://192.168.10.72:4000/team/removeMember/${teamId}/${userId}`,
+            `${process.env.REACT_APP_BACKEND_URL}/team/removeMember/${teamId}/${userId}`,
             { withCredentials: true }
           )
           .then((resp) => {
@@ -140,7 +140,7 @@ const UserProfile = (props: modalInterface) => {
       if (result.isConfirmed) {
         axios
           .put(
-            `http://192.168.10.72:4000/team/removeAdmin/${teamId}/${userId}`,
+            `${process.env.REACT_APP_BACKEND_URL}/team/removeAdmin/${teamId}/${userId}`,
             {},
             { withCredentials: true }
           )

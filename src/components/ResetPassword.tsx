@@ -37,9 +37,13 @@ const ResetPassword = () => {
       validationSchema: resetPassword,
       onSubmit: (values) => {
         axios
-          .put(`http://192.168.10.72:4000/auth/resetPassword`, values, {
-            withCredentials: true,
-          })
+          .put(
+            `${process.env.REACT_APP_BACKEND_URL}/auth/resetPassword`,
+            values,
+            {
+              withCredentials: true,
+            }
+          )
           .then((resp) => {
             if (resp.data.success) {
               Swal.fire({
@@ -116,14 +120,14 @@ const ResetPassword = () => {
                   {showCurrentPassword ? (
                     <img
                       src="/icons/eye-show.svg"
-                      className="-ml-[30px]  cursor-pointer"
+                      className="-ml-[30px] z-10 cursor-pointer"
                       onClick={toggleCurrentPassword}
                       alt=""
                     ></img>
                   ) : (
                     <img
                       src="/icons/eye-hidden.svg"
-                      className="-ml-[30px]  cursor-pointer"
+                      className="-ml-[30px] z-10  cursor-pointer"
                       onClick={toggleCurrentPassword}
                       alt=""
                     ></img>
@@ -162,14 +166,14 @@ const ResetPassword = () => {
                   {showPassword ? (
                     <img
                       src="/icons/eye-show.svg"
-                      className="-ml-[30px]  cursor-pointer"
+                      className="-ml-[30px] z-10 cursor-pointer"
                       onClick={togglePassword}
                       alt=""
                     ></img>
                   ) : (
                     <img
                       src="/icons/eye-hidden.svg"
-                      className="-ml-[30px]  cursor-pointer"
+                      className="-ml-[30px] z-10 cursor-pointer"
                       onClick={togglePassword}
                       alt=""
                     ></img>
@@ -207,14 +211,14 @@ const ResetPassword = () => {
                   {showConfirmPassword ? (
                     <img
                       src="/icons/eye-show.svg"
-                      className="-ml-[30px]  cursor-pointer"
+                      className="-ml-[30px] z-10 cursor-pointer"
                       onClick={toggleConfirmPassword}
                       alt=""
                     ></img>
                   ) : (
                     <img
                       src="/icons/eye-hidden.svg"
-                      className="-ml-[30px]  cursor-pointer"
+                      className="-ml-[30px] z-10 cursor-pointer"
                       onClick={toggleConfirmPassword}
                       alt=""
                     ></img>
