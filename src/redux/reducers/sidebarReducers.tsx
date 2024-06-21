@@ -1,26 +1,22 @@
-import { PayloadAction } from "@reduxjs/toolkit";
-import { TOGGLE_SIDEBAR, TOGGLE_TEAMS } from "../types";
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   isSidebarOpen: true,
   isTeamsOpen: false,
 };
 
-const sideBarReducer = (state = initialState, action: PayloadAction) => {
-  switch (action.type) {
-    case TOGGLE_SIDEBAR:
-      return {
-        ...state,
-        isSidebarOpen: !state.isSidebarOpen,
-      };
-    case TOGGLE_TEAMS:
-      return {
-        ...state,
-        isTeamsOpen: !state.isTeamsOpen,
-      };
-    default:
-      return state;
-  }
-};
+const sidebarSlice = createSlice({
+  name: "sidebar",
+  initialState,
+  reducers: {
+    toggleSidebar(state) {
+      state.isSidebarOpen = !state.isSidebarOpen;
+    },
+    toggleTeams(state) {
+      state.isTeamsOpen = !state.isTeamsOpen;
+    },
+  },
+});
 
-export default sideBarReducer;
+export const sidebarReducer = sidebarSlice.reducer;
+export const { toggleSidebar, toggleTeams } = sidebarSlice.actions;

@@ -6,8 +6,8 @@ import { ChangeEvent, useState } from "react";
 import { customErrorInterface } from "../../pages/auth/Register";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setUserTeams } from "../../redux/actions/userTeams";
 import { fetchUserTeams } from "../../hooks/fetchData";
+import { setUserTeams } from "../../redux/reducers/teamsReducers";
 
 interface modalInterface {
   isOpen: boolean;

@@ -3,7 +3,7 @@ import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Snackbar, Tooltip } from "@mui/material";
 import CopyToClipboard from "react-copy-to-clipboard";
 import Swal from "sweetalert2";
@@ -11,9 +11,6 @@ import Swal from "sweetalert2";
 import TeamNavbar from "../../components/TeamNavbar";
 import Loader from "../../components/Loader";
 import { socket } from "../../socket";
-import { userInterface } from "../../components/UpdateProfile";
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/types";
 
 interface teamMembersInterface {
   user_id: number;

@@ -1,6 +1,4 @@
 import { useDispatch, useSelector } from "react-redux";
-import { toggleSidebar, toggleTeams } from "../redux/actions/sidebarActions";
-import { RootState } from "../redux/types";
 import CreateTeam from "./modals/CreateTeam";
 import { useEffect, useState } from "react";
 import JoinTeam from "./modals/JoinTeam";
@@ -8,6 +6,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { userInterface } from "./UpdateProfile";
 import axios from "axios";
 import UserProfile from "./modals/UserProfile";
+import { RootState } from "../redux/store";
+import { toggleSidebar, toggleTeams } from "../redux/reducers/sidebarReducers";
 
 const Navbar = () => {
   const [isCreateTeam, setIsCreateTeam] = useState<boolean>(false);

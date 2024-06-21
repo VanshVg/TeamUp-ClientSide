@@ -8,11 +8,11 @@ import { customErrorInterface } from "../auth/Register";
 import CreateTeam from "../../components/modals/CreateTeam";
 import JoinTeam from "../../components/modals/JoinTeam";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../redux/types";
-import { setUserTeams } from "../../redux/actions/userTeams";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import Loader from "../../components/Loader";
+import { RootState } from "../../redux/store";
+import { setUserTeams } from "../../redux/reducers/teamsReducers";
 
 export interface teamInterface {
   id: number;

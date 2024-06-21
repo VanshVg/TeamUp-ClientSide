@@ -241,14 +241,14 @@ const Register = () => {
                     {password ? (
                       <img
                         src="/icons/eye-show.svg"
-                        className="-ml-[30px]  cursor-pointer"
+                        className="-ml-[30px] z-10 cursor-pointer"
                         onClick={togglePassword}
                         alt=""
                       ></img>
                     ) : (
                       <img
                         src="/icons/eye-hidden.svg"
-                        className="-ml-[30px]  cursor-pointer"
+                        className="-ml-[30px] z-10 cursor-pointer"
                         onClick={togglePassword}
                         alt=""
                       ></img>
@@ -286,14 +286,14 @@ const Register = () => {
                     {confirmPassword ? (
                       <img
                         src="/icons/eye-show.svg"
-                        className="-ml-[30px]  cursor-pointer"
+                        className="-ml-[30px] z-10 cursor-pointer"
                         onClick={toggleConfirmPassword}
                         alt=""
                       ></img>
                     ) : (
                       <img
                         src="/icons/eye-hidden.svg"
-                        className="-ml-[30px]  cursor-pointer"
+                        className="-ml-[30px] z-10 cursor-pointer"
                         onClick={toggleConfirmPassword}
                         alt=""
                       ></img>

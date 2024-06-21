@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { setUser } from "../../redux/actions/userActions";
+import { setUser } from "../../redux/reducers/userReducers";
 
 const Activation = () => {
   const params = useParams();

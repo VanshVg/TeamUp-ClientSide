@@ -7,7 +7,7 @@ import axios from "axios";
 import { customErrorInterface } from "./Register";
 import Cookies, { Cookie } from "universal-cookie";
 import { useDispatch } from "react-redux";
-import { setUser } from "../../redux/actions/userActions";
+import { setUser } from "../../redux/reducers/userReducers";
 
 const Login = () => {
   const data = {
@@ -150,14 +150,14 @@ const Login = () => {
                     {password ? (
                       <img
                         src="/icons/eye-show.svg"
-                        className="-ml-[30px]  cursor-pointer"
+                        className="-ml-[30px] z-10 cursor-pointer"
                         onClick={togglePassword}
                         alt=""
                       ></img>
                     ) : (
                       <img
                         src="/icons/eye-hidden.svg"
-                        className="-ml-[30px]  cursor-pointer"
+                        className="-ml-[30px] z-10 cursor-pointer"
                         onClick={togglePassword}
                         alt=""
                       ></img>

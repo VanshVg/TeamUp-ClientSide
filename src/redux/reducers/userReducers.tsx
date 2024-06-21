@@ -1,31 +1,24 @@
-import { PayloadAction } from "@reduxjs/toolkit";
-import { SET_USER } from "../types";
+import { createSlice } from "@reduxjs/toolkit";
 import { userInterface } from "../../components/UpdateProfile";
 
-interface usersInterface {
-  user: userInterface;
-}
+const initialState: userInterface = {
+  id: 0,
+  first_name: "",
+  last_name: "",
+  username: "",
+  email: "",
+  role: "",
+};
 
-const initialState: usersInterface = {
-  user: {
-    id: 0,
-    first_name: "",
-    last_name: "",
-    username: "",
-    email: "",
-    role: "",
+const usersSlice = createSlice({
+  name: "users",
+  initialState,
+  reducers: {
+    setUser(state, action) {
+      state = action.payload;
+    },
   },
-};
+});
 
-const usersReducer = (state = initialState, action: PayloadAction) => {
-  switch (action.type) {
-    case SET_USER:
-      return {
-        user: action.payload,
-      };
-    default:
-      return state;
-  }
-};
-
-export default usersReducer;
+export const usersReducer = usersSlice.reducer;
+export const { setUser } = usersSlice.actions;

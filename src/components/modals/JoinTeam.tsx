@@ -5,12 +5,12 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { fetchUserTeams } from "../../hooks/fetchData";
 import { useDispatch, useSelector } from "react-redux";
-import { setUserTeams } from "../../redux/actions/userTeams";
 import { ChangeEvent, useState } from "react";
 import { customErrorInterface } from "../../pages/auth/Register";
 import { socket } from "../../socket";
-import { RootState } from "../../redux/types";
 import { userInterface } from "../UpdateProfile";
+import { RootState } from "../../redux/store";
+import { setUser } from "../../redux/reducers/userReducers";
 
 interface modalInterface {
   isOpen: boolean;
@@ -23,7 +23,7 @@ const JoinTeam = (props: modalInterface) => {
   const { isOpen, onRequestClose } = props;
 
   const userData: userInterface = useSelector(
-    (state: RootState) => state.user.user
+    (state: RootState) => state.user
   ) as userInterface;
 
   const [joinTeamError, setJoinTeamError] = useState<customErrorInterface>({
@@ -47,7 +47,7 @@ const JoinTeam = (props: modalInterface) => {
             if (resp.data.success) {
               try {
                 let result = await fetchUserTeams();
-                dispatch(setUserTeams(result.data.userTeams));
+                dispatch(setUser(result.data.userTeams));
               } catch (error) {
                 if (error) {
                   navigate("/*");

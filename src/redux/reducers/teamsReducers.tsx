@@ -1,5 +1,4 @@
-import { PayloadAction } from "@reduxjs/toolkit";
-import { SET_USER_TEAMS } from "../types";
+import { createSlice } from "@reduxjs/toolkit";
 import { userTeamsInterface } from "../../pages/dashboard/Dashboard";
 
 interface teamsInterface {
@@ -10,15 +9,15 @@ const initialState: teamsInterface = {
   userTeams: [],
 };
 
-const teamsReducer = (state = initialState, action: PayloadAction) => {
-  switch (action.type) {
-    case SET_USER_TEAMS:
-      return {
-        userTeams: action.payload,
-      };
-    default:
-      return state;
-  }
-};
+const teamSlice = createSlice({
+  name: "teams",
+  initialState,
+  reducers: {
+    setUserTeams(state, action) {
+      state.userTeams = action.payload;
+    },
+  },
+});
 
-export default teamsReducer;
+export const teamsReducer = teamSlice.reducer;
+export const { setUserTeams } = teamSlice.actions;

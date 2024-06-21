@@ -1,14 +1,14 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { RootState } from "../redux/types";
-import { toggleSidebar, toggleTeams } from "../redux/actions/sidebarActions";
 import { Tooltip } from "@mui/material";
 import axios from "axios";
-import { setUserTeams } from "../redux/actions/userTeams";
 import { userTeamsInterface } from "../pages/dashboard/Dashboard";
 import Swal from "sweetalert2";
 import Cookies from "universal-cookie";
+import { RootState } from "../redux/store";
+import { setUserTeams } from "../redux/reducers/teamsReducers";
+import { toggleSidebar, toggleTeams } from "../redux/reducers/sidebarReducers";
 
 const Sidebar = () => {
   const isTeamsOpen = useSelector(
