@@ -2,9 +2,11 @@ import { ChangeEvent, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
-import register from "../../schemas/register";
 import axios from "axios";
 import Cookies from "universal-cookie";
+
+import register from "../../schemas/register";
+import { axiosErrorI } from "../../interfaces";
 
 export interface customErrorInterface {
   type: string;
@@ -45,27 +47,28 @@ const Register = () => {
     useFormik({
       initialValues: data,
       validationSchema: register,
-      onSubmit: (values) => {
-        axios
-          .post(`${process.env.REACT_APP_BACKEND_URL}/auth/register`, values)
-          .then((response) => {
-            const { data } = response;
-            if (data.success) {
-              cookies.set("token", data.token, {
-                path: "/",
-                expires: new Date(Date.now() + 2592000000),
-              });
-              setActivation(data.verification_token);
-            }
-          })
-          .catch((error) => {
-            const { data } = error.response;
-            if (data.type === "server") {
-              navigate("/*");
-            } else if (!data.success) {
-              setRegisterError({ type: data.type, message: data.message });
-            }
-          });
+      onSubmit: async (values) => {
+        try {
+          const response = await axios.post(
+            `${process.env.REACT_APP_BACKEND_URL}/auth/register`,
+            values
+          );
+          const { data } = response;
+          if (data.success) {
+            cookies.set("token", data.token, {
+              path: "/",
+              expires: new Date(Date.now() + 2592000000),
+            });
+            setActivation(data.verification_token);
+          }
+        } catch (error) {
+          const { data } = (error as axiosErrorI).response;
+          if (data.type === "server") {
+            navigate("/*");
+          } else if (!data.success) {
+            setRegisterError({ type: data.type ?? "", message: data.message });
+          }
+        }
       },
     });
 
@@ -319,8 +322,10 @@ const Register = () => {
             </div>
             <div className="text-link hover:underline mt-[5px] -mb-[15px]">
               {activation ? (
-                <Link to={`http://192.168.10.72:3000/activation/${activation}`}>
-                  http://192.168.10.72:3000/activation/{activation}
+                <Link
+                  to={`http://192.168.10.107:3000/activation/${activation}`}
+                >
+                  http://192.168.10.107:3000/activation/{activation}
                 </Link>
               ) : (
                 ""

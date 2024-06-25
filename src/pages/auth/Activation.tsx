@@ -3,7 +3,9 @@ import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
+
 import { setUser } from "../../redux/reducers/userReducers";
+import { axiosErrorI } from "../../interfaces";
 
 const Activation = () => {
   const params = useParams();
@@ -15,9 +17,14 @@ const Activation = () => {
     message: "",
   });
 
-  useEffect(() => {
-    axios
-      .put(
+  enum Type {
+    Unauthorized = "unauthorised",
+    Server = "server",
+  }
+
+  const verifyActivation = async () => {
+    try {
+      const response = await axios.put(
         `${process.env.REACT_APP_BACKEND_URL}/auth/activate/${params.token}`,
         {},
         {
@@ -27,28 +34,32 @@ const Activation = () => {
             "Content-Type": "application/json",
           },
         }
-      )
-      .then((resp) => {
-        if (resp.data.success) {
-          dispatch(setUser(resp.data.userData));
-        }
-      })
-      .catch((error) => {
-        const { data } = error.response;
-        if (data.type === "server") {
-          navigate("/*");
-        } else if (!data.success) {
-          setActivationError({ type: data.type, message: data.message });
-        }
-      });
+      );
+      if (response.data.success) {
+        dispatch(setUser(response.data.userData));
+      }
+    } catch (error) {
+      const { data } = (error as axiosErrorI).response;
+      if (data.type === "server") {
+        navigate("/error");
+      } else if (!data.success) {
+        setActivationError({ type: data.type ?? "", message: data.message });
+      }
+    }
+  };
+
+  useEffect(() => {
+    verifyActivation();
   }, [params.token]);
+
   return (
     <>
       <Helmet>
         <title>Activation</title>
       </Helmet>
       <div className="activation-container">
-        {activationError.type !== "" ? (
+        {activationError.type === Type.Unauthorized ||
+        activationError.type === Type.Server ? (
           <>
             <p className="text-red">
               {activationError.message ||

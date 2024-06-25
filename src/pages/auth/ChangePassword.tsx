@@ -1,11 +1,13 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import { customErrorInterface } from "./Register";
 import { useFormik } from "formik";
-import changePassword from "../../schemas/changePassword";
 import axios from "axios";
 import Swal from "sweetalert2";
+
+import { customErrorInterface } from "./Register";
+import changePassword from "../../schemas/changePassword";
+import { axiosErrorI, responseI } from "../../interfaces";
 
 interface dataInterface {
   password: string;
@@ -37,53 +39,61 @@ const ChangePassword = () => {
     username = state.state.username;
   }
 
-  useEffect(() => {
-    axios
-      .post(
+  const verifyToken = async () => {
+    try {
+      await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/auth/verifyToken/${params.token}`,
         {
           username: username,
         }
-      )
-      .catch((error) => {
-        const { data } = error.response;
-        if (data.type === "server") {
-          navigate("/*");
-        } else if (!data.success) {
-          setChangePasswordError({ type: data.type, message: data.message });
-        }
-      });
+      );
+    } catch (error) {
+      const { data } = (error as axiosErrorI).response;
+      if (data.type === "server") {
+        navigate("/error");
+      } else if (!data.success) {
+        setChangePasswordError({
+          type: data.type ?? "",
+          message: data.message,
+        });
+      }
+    }
+  };
+
+  useEffect(() => {
+    verifyToken();
   }, [params.token, username]);
 
   const { values, errors, handleBlur, handleChange, touched, submitForm } =
     useFormik({
       initialValues: data,
       validationSchema: changePassword,
-      onSubmit: (values) => {
+      onSubmit: async (values) => {
         let userData = {
           password: values.password,
           username: username,
         };
-        axios
-          .put(`${process.env.REACT_APP_BACKEND_URL}/auth/password`, userData)
-          .then((resp) => {
-            if (resp.data.success) {
-              Swal.fire({
-                title: "Success!",
-                text: "Password is changed successfully",
-                icon: "success",
-                showConfirmButton: false,
-                timer: 2000,
-              }).then(() => {
-                navigate("/login");
-              });
-            }
-          })
-          .catch((error) => {
-            if (!error.response.data.success) {
-              navigate("/*");
-            }
-          });
+        try {
+          const response: responseI = await axios.put(
+            `${process.env.REACT_APP_BACKEND_URL}/auth/password`,
+            userData
+          );
+          if (response.data.success) {
+            Swal.fire({
+              title: "Success!",
+              text: "Password is changed successfully",
+              icon: "success",
+              showConfirmButton: false,
+              timer: 2000,
+            }).then(() => {
+              navigate("/login");
+            });
+          }
+        } catch (error) {
+          if (!(error as axiosErrorI).response.data.success) {
+            navigate("/*");
+          }
+        }
       },
     });
 

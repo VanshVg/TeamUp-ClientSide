@@ -2,12 +2,14 @@ import { useFormik } from "formik";
 import { ChangeEvent, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link, NavigateFunction, useNavigate } from "react-router-dom";
-import login from "../../schemas/login";
 import axios from "axios";
-import { customErrorInterface } from "./Register";
 import Cookies, { Cookie } from "universal-cookie";
 import { useDispatch } from "react-redux";
+
+import login from "../../schemas/login";
+import { customErrorInterface } from "./Register";
 import { setUser } from "../../redux/reducers/userReducers";
+import { axiosErrorI } from "../../interfaces";
 
 const Login = () => {
   const data = {
@@ -34,28 +36,29 @@ const Login = () => {
     useFormik({
       initialValues: data,
       validationSchema: login,
-      onSubmit: (values) => {
-        axios
-          .post(`${process.env.REACT_APP_BACKEND_URL}/auth/login`, values)
-          .then((response) => {
-            const { data } = response;
-            if (data.success) {
-              cookies.set("token", data.token, {
-                path: "/",
-                expires: new Date(Date.now() + 2592000000),
-              });
-              dispatch(setUser(data.userData));
-              navigate("/dashboard");
-            }
-          })
-          .catch((error) => {
-            const { data } = error.response;
-            if (data.type === "server") {
-              navigate("/*");
-            } else if (!data.success) {
-              setLoginError({ type: data.type, message: data.message });
-            }
-          });
+      onSubmit: async (values) => {
+        try {
+          const response = await axios.post(
+            `${process.env.REACT_APP_BACKEND_URL}/auth/login`,
+            values
+          );
+          const { data } = response;
+          if (data.success) {
+            cookies.set("token", data.token, {
+              path: "/",
+              expires: new Date(Date.now() + 2592000000),
+            });
+            dispatch(setUser(data.userData));
+            navigate("/dashboard");
+          }
+        } catch (error) {
+          const { data } = (error as axiosErrorI).response;
+          if (data.type === "server") {
+            navigate("/*");
+          } else if (!data.success) {
+            setLoginError({ type: data.type ?? "", message: data.message });
+          }
+        }
       },
     });
 

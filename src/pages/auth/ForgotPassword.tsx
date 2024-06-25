@@ -1,10 +1,12 @@
 import { useFormik } from "formik";
 import { Helmet } from "react-helmet";
 import { Link, useNavigate } from "react-router-dom";
-import forgotPassword from "../../schemas/forgotPassword";
 import axios from "axios";
 import { ChangeEvent, useState } from "react";
+
+import forgotPassword from "../../schemas/forgotPassword";
 import { customErrorInterface } from "./Register";
+import { axiosErrorI, responseI } from "../../interfaces";
 
 interface dataInterface {
   username: string;
@@ -27,22 +29,23 @@ const ForgotPassword = () => {
     useFormik({
       initialValues: data,
       validationSchema: forgotPassword,
-      onSubmit: (values) => {
-        axios
-          .post(`${process.env.REACT_APP_BACKEND_URL}/auth/verify`, values)
-          .then((resp) => {
-            if (resp.data.success) {
-              setResetToken(resp.data.reset_token);
-            }
-          })
-          .catch((error) => {
-            const { data } = error.response;
-            if (data.type === "server") {
-              navigate("/*");
-            } else if (!data.success) {
-              setVerifyError({ type: data.type, message: data.message });
-            }
-          });
+      onSubmit: async (values) => {
+        try {
+          const response: responseI = await axios.post(
+            `${process.env.REACT_APP_BACKEND_URL}/auth/verify`,
+            values
+          );
+          if (response.data.success) {
+            setResetToken(response.data.reset_token ?? "");
+          }
+        } catch (error) {
+          const { data } = (error as axiosErrorI).response;
+          if (data.type === "server") {
+            navigate("/*");
+          } else if (!data.success) {
+            setVerifyError({ type: data.type ?? "", message: data.message });
+          }
+        }
       },
     });
 
